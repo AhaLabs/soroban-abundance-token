@@ -1,6 +1,6 @@
 import { fill, hide, show } from './domHelpers'
 
-const formatLargeNum = n => n >= 1e5 || (n < 1e-3 && n !== 0)
+const formatLargeNum = (n: number) => n >= 1e5 || (n < 1e-3 && n !== 0)
   ? n.toExponential(2)
   : new Intl.NumberFormat(undefined, { maximumSignificantDigits: 3 }).format(n)
 
