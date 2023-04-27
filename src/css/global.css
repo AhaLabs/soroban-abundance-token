@@ -24,6 +24,7 @@ html {
   --success: rgb(90, 206, 132);
   --primary: #FF585D;
   --secondary: #0072CE;
+  --green: rgb(90, 206, 132);
 
   background-color: var(--bg);
   color: var(--fg);
@@ -38,7 +39,6 @@ body {
 }
 
 h1 {
-  text-align: center;
   position: relative;
 }
 
@@ -177,4 +177,42 @@ li {
   input:focus {
     box-shadow: 0 0 10em rgba(255, 255, 255, 0.02) inset;
   }
+}
+
+.todo-cards {
+  display: grid;
+  gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+}
+
+.todo-cards > div {
+  border-radius: 0.5rem;
+  border: 1px solid var(--light-gray);
+  position: relative;
+  padding: 1rem;
+}
+.todo-cards h2 {
+  margin: 0;
+}
+.todo-cards p {
+  margin-bottom: 0;
+}
+.todo-cards > .done:after {
+  content: '✓';
+  color: var(--green);
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 0.25em 0 0;
+}
+
+.todo-cards .done {
+  border: 1px solid var(--green);
+}
+
+.todo-cards .done h2,
+.todo-cards .done p {
+  opacity: 0.5;
+  text-decoration: line-through;
 }

@@ -10,6 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@stellar/freighter-api": "^1.4.0",
     "astro": "^2.3.1"
   }
 }

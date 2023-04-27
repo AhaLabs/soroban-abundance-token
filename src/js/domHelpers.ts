@@ -4,7 +4,7 @@ import render from './render'
  * Get all elements with `data-behavior` matching given `selector`, with type
  * cast to HTMLElement rather than generic Element
  */
-const getAll = (selector: string) => Array.from(document.querySelectorAll(selector) as NodeListOf<HTMLElement>)
+const getAll = (selector: string) => Array.from(document.querySelectorAll(`[data-behavior=${selector}`) as NodeListOf<HTMLElement>)
 
 /**
  * Update DOM elements that have a "data-behavior" attribute

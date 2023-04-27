@@ -6,9 +6,14 @@ const formatLargeNum = (n: number) => n >= 1e5 || (n < 1e-3 && n !== 0)
 
 // update the html based on user & data state
 export default async function render () {
+  fill('tokenSymbol').with(window.tokenSymbol)
+
+  if (window.hasFreighter) {
+    document.querySelector('#getFreighter')!.className = 'done'
+  }
+
   // if not signed in, stop here
   if (!window.sorobanUserAddress) return
-  fill('tokenSymbol').with(window.tokenSymbol)
 
   hide('signed-out')
   show('signed-in')

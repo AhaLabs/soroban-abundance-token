@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@stellar/freighter-api':
+    specifier: ^1.4.0
+    version: 1.4.0
   astro:
     specifier: ^2.3.1
     version: 2.3.1
@@ -607,6 +610,10 @@ packages:
       picocolors: 1.0.0
       tiny-glob: 0.2.9
       tslib: 2.5.0
+    dev: false
+
+  /@stellar/freighter-api@1.4.0:
+    resolution: {integrity: sha512-/ANu1/4mnReUvrSDveKj5XhrnafEssESF/lVdOR1v0ja02kFuhsdsw3anzdz0NvPaPbFgPmjU+v9t9R8KN6r+g==}
     dev: false
 
   /@types/babel__core@7.20.0:
