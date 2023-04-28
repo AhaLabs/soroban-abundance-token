@@ -2,7 +2,7 @@ import './sorobanAuth'
 import { initDOMhandlers } from './domHelpers'
 import render from './render'
 
-window.tokenSymbol = 'LOL'
+window.tokenSymbol = 'ABND'
 
 initDOMhandlers()
 render()

@@ -1,5 +1,3 @@
-import render from './render'
-
 /**
  * Get all elements with `data-behavior` matching given `selector`, with type
  * cast to HTMLElement rather than generic Element
@@ -41,11 +39,6 @@ export const show = (selector: string, display?: string) =>
 
 // DOM handlers to be added once after page load
 export const initDOMhandlers = () => {
-  (document.querySelector('[data-behavior=logout]') as HTMLElement).onclick = async function logout () {
-    await window.web3Modal.clearCachedProvider()
-    setTimeout(() => window.location.reload())
-  }
-
   document.querySelectorAll('.dropdown').forEach(d => {
     document.querySelector('body')!.addEventListener('click', event => {
       const button = d.querySelector('button')!
@@ -67,49 +60,57 @@ export const initDOMhandlers = () => {
     })
   });
 
-  (document.querySelector('input#amount') as HTMLInputElement).oninput = (event) => {
-    const submitButton = document.querySelector('main form button') as HTMLButtonElement
-    const input = event.target as HTMLInputElement
-
-    if (Number(input.value) > 0) {
-      submitButton.disabled = false
-    } else {
-      submitButton.disabled = true
-    }
+  (document.querySelector('[data-behavior=mint]') as HTMLFormElement).onclick = async (event) => {
+    alert('uh oh, not implemented yet')
   }
 
-  (document.querySelector('main form') as HTMLFormElement).onsubmit = async (event) => {
-    event.preventDefault()
-    const input = event.target as HTMLFormElement
+  /**
+   * for the takes-an-argument version
+   *
+   * (document.querySelector('input#amount') as HTMLInputElement).oninput = (event) => {
+   *   const submitButton = document.querySelector('main form button') as HTMLButtonElement
+   *   const input = event.target as HTMLInputElement
+   *
+   *   if (Number(input.value) > 0) {
+   *     submitButton.disabled = false
+   *   } else {
+   *     submitButton.disabled = true
+   *   }
+   * }
+   *
+   * (document.querySelector('main form') as HTMLFormElement).onsubmit = async (event) => {
+   *   event.preventDefault()
+   *   const input = event.target as HTMLFormElement
 
-    // get elements from the form using their id attribute
-    const { amount, fieldset, submit } = input.elements as unknown as {
-      amount: HTMLInputElement
-      fieldset: HTMLFieldSetElement
-      submit: HTMLButtonElement
-    }
+   *   // get elements from the form using their id attribute
+   *   const { amount, fieldset, submit } = input.elements as unknown as {
+   *     amount: HTMLInputElement
+   *     fieldset: HTMLFieldSetElement
+   *     submit: HTMLButtonElement
+   *   }
 
-    // disable the form while the tokens get locked in Ethereum
-    fieldset.disabled = true
+   *   // disable the form while the tokens get locked in Ethereum
+   *   fieldset.disabled = true
 
-    try {
-      const minting = await window.erc20.mint(amount.value)
-      await minting.wait(2)
-    } catch (e) {
-      alert(
-        'Something went wrong! ' +
-        'Maybe you need to sign out and back in? ' +
-        'Check your browser console for more info.'
-      )
-      throw e
-    } finally {
-      // re-enable the form, whether the call succeeded or failed
-      fieldset.disabled = false
-    }
+   *   try {
+   *     const minting = await window.erc20.mint(amount.value)
+   *     await minting.wait(2)
+   *   } catch (e) {
+   *     alert(
+   *       'Something went wrong! ' +
+   *       'Maybe you need to sign out and back in? ' +
+   *       'Check your browser console for more info.'
+   *     )
+   *     throw e
+   *   } finally {
+   *     // re-enable the form, whether the call succeeded or failed
+   *     fieldset.disabled = false
+   *   }
 
-    // if the call succeeded, reset the form
-    amount.value = ''
-    submit.disabled = true
-    render()
-  }
+   *   // if the call succeeded, reset the form
+   *   amount.value = ''
+   *   submit.disabled = true
+   *   render()
+   * }
+   */
 }

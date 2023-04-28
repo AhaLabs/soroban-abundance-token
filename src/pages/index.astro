@@ -29,85 +29,76 @@ import '../css/global.css'
         <div>
           <a href="https://github.com/AhaLabs/abundance-token">View source</a>
         </div>
-        <div data-behavior="signed-in" style="display: none; margin-top: 0.5em">
-          <button class="link" data-behavior="logout">
-            Sign out
-          </button>
-        </div>
       </div>
     </div>
   </nav>
 
-  <main style="margin: 0 auto; max-width: 50em">
+  <main data-behavior="gettingStarted" style="margin: 0 auto; max-width: 50em; padding-bottom: 2rem">
     <div style="text-align: center; margin: 2rem auto 5rem; max-width: 25em">
       <h1 class="title">Abundance Token</h1>
       <p>
         An non-scarce <a href="https://soroban.stellar.org/" rel="nofollow">Soroban</a> <a href="https://soroban.stellar.org/docs/reference/interfaces/token-interface" rel="nofollow">Fungible Token</a>. Go ahead and take as much as you want!
       </p>
     </div>
-    <div data-behavior="gettingStarted">
-      <h1>Let's get you set up</h1>
-      <p>
-        You'll need a few things to get started. Don't worry, it's easy!
-      </p>
-      <div class="todo-cards">
-        <div id="getFreighter">
-          <h2>1. Get Freighter</h2>
-          <p>
-            Freighter is a browser extension that lets you interact with the
-            Soroban network. It's like MetaMask, but for Soroban.
-          </p>
-          <p>
-            <a href="https://www.freighter.app/">Get Freighter</a>
-          </p>
-        </div>
-        <div id="enableFreighter">
-          <h2>2. Enable Freighter</h2>
-          <p>
-            Once you've installed Freighter, you'll need to enable it for this
-            site. You can do that by clicking the Freighter icon in your browser
-            toolbar.
-          </p>
-        </div>
-        <div id="getTestXLM">
-          <h2>3. Get Test XLM</h2>
-          <p>
-            You'll need a small amount of test XLM to pay for the transaction
-            that mints your <span data-behavior="tokenSymbol">🤔</span> tokens.
-            You can get some from the
-            <a href="https://TODO">TODO faucet</a>.
-          </p>
-        </div>
+    <h1>Let's get you set up</h1>
+    <p>
+      You'll need a few things to get started. Don't worry, it's easy!
+    </p>
+    <div class="todo-cards">
+      <div id="getFreighter">
+        <h2>1. Get Freighter</h2>
+        <p>
+          Freighter is a browser extension that lets you interact with the Soroban network.
+        </p>
+        <p>
+          <a href="https://www.freighter.app/">Get Freighter</a>
+        </p>
+      </div>
+      <div id="enableFreighter">
+        <h2>2. Enable Freighter</h2>
+        <p>
+          Once you install Freighter, this page will prompt you to connect to it. Say yes!
+        </p>
+      </div>
+      <div id="selectFuturenet">
+        <h2>3. Select Futurenet</h2>
+        <p>
+          Open the Freighter extension and select the Futurenet network in the top right.
+        </p>
       </div>
     </div>
+  </main>
 
-    <div data-behavior="readyToGo" style="display: none">
-      <h1 class="title">
-        Your <span data-behavior="tokenSymbol">🤔</span> Balance:
-        <span class="balance" data-behavior="tokenBalance">🤔</span>
-      </h1>
-      <form style="margin: 0 auto; max-width: 15em">
-        <fieldset id="fieldset">
-          <label
-            for="amount"
-            style="display: block; margin: 2em 0 0.1em"
-          >
-            Want more?
-          </label>
-          <div style="display: flex">
-            <input
-              autocomplete="off"
-              id="amount"
-              type="number"
-            />
-            <button id="submit" disabled style="border-radius: 0 5px 5px 0">
-              OK
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-
+  <main data-behavior="allReady" style="display: none; text-align: center; margin: 2rem auto 0; max-width: 25em; padding-bottom: 2rem">
+    <h1 class="title">
+      Your <span data-behavior="tokenSymbol">🤔</span> Balance:
+      <span class="balance" data-behavior="tokenBalance">🤔</span>
+    </h1>
+    <button data-behavior="mint">
+      Mint One
+    </button>
+    <!-- the takes-an-argument version
+    <form style="margin: 0 auto; max-width: 15em">
+      <fieldset id="fieldset">
+        <label
+          for="amount"
+          style="display: block; margin: 2em 0 0.1em"
+        >
+          Want more?
+        </label>
+        <div style="display: flex">
+          <input
+            autocomplete="off"
+            id="amount"
+            type="number"
+          />
+          <button id="submit" disabled style="border-radius: 0 5px 5px 0">
+            OK
+          </button>
+        </div>
+      </fieldset>
+    </form>
+    -->
   </main>
 
   <script src="../js/index.js"></script>
