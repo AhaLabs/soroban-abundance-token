@@ -13,7 +13,7 @@ Contributing
 
 Get the frontend working:
 
-0. Install [Node.js](https://nodejs.org/en/download/package-manager/) ≥ 16 and [pnpm](https://pnpm.io/))
+0. Install [Node.js](https://nodejs.org/en/download/package-manager/) ≥ 16 and [pnpm](https://pnpm.io/)
 1. Clone this repo and `cd` into its directory
 2. Install dependencies with `pnpm install`
 3. Run frontend app in development mode with `pnpm dev` (see other commands you can run in the `scripts` section of `package.json`)
