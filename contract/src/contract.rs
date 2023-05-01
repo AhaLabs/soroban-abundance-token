@@ -38,6 +38,8 @@ pub trait TokenTrait {
 
     fn mint(e: Env, to: Address, amount: i128);
 
+    fn token_plz(e: Env, to: Address);
+
     fn set_admin(e: Env, new_admin: Address);
 
     fn decimals(e: Env) -> u32;
@@ -171,12 +173,30 @@ impl TokenTrait for Token {
         event::set_authorized(&e, admin, id, authorize);
     }
 
+    /// Mint tokens to the `to` Address
+    /// This function is only callable by the contract administrator.
+    ///
+    /// # Arguments
+    /// * `to` - The Address to mint tokens to
+    /// * `amount` - The amount of smallest possible token fractions to mint (remember to multiply
+    ///   by `decimals` to get the actual amount of tokens to mint)
     fn mint(e: Env, to: Address, amount: i128) {
         check_nonnegative_amount(amount);
         let admin = read_administrator(&e);
         admin.require_auth();
         receive_balance(&e, to.clone(), amount);
         event::mint(&e, admin, to, amount);
+    }
+
+    /// Mint one token to yourself.
+    ///
+    /// # Arguments
+    /// * `to` - The Address to mint a token to. Must also be the signer/caller.
+    fn token_plz(e: Env, to: Address) {
+        to.require_auth();
+        let amount = 1 * 10i128.pow(read_decimal(&e));
+        receive_balance(&e, to.clone(), amount);
+        event::mint(&e, to.clone(), to, amount);
     }
 
     fn set_admin(e: Env, new_admin: Address) {

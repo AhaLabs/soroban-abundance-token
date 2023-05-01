@@ -4,9 +4,11 @@ extern crate std;
 use crate::{contract::Token, TokenClient};
 use soroban_sdk::{testutils::Address as _, Address, Env, IntoVal, Symbol};
 
+const DECIMALS: u32 = 7;
+
 fn create_token(e: &Env, admin: &Address) -> TokenClient {
     let token = TokenClient::new(e, &e.register_contract(None, Token {}));
-    token.initialize(admin, &7, &"name".into_val(e), &"symbol".into_val(e));
+    token.initialize(admin, &DECIMALS, &"name".into_val(e), &"symbol".into_val(e));
     token
 }
 
@@ -127,6 +129,27 @@ fn test() {
         )]
     );
     assert_eq!(token.allowance(&user2, &user3), 0);
+}
+
+#[test]
+fn token_plz() {
+    let e: Env = Default::default();
+
+    let admin = Address::random(&e);
+    let user = Address::random(&e);
+    let token = create_token(&e, &admin);
+
+    token.token_plz(&user);
+    assert_eq!(
+        e.recorded_top_authorizations(),
+        std::vec![(
+            user.clone(),
+            token.contract_id.clone(),
+            Symbol::short("token_plz"),
+            (&user,).into_val(&e),
+        )]
+    );
+    assert_eq!(token.balance(&user), 1 * 10i128.pow(DECIMALS));
 }
 
 #[test]
