@@ -15,4 +15,7 @@ pub enum DataKey {
     Nonce(Address),
     State(Address),
     Admin,
+    Decimals,
+    Name,
+    Symbol,
 }

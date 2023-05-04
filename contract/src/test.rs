@@ -23,108 +23,108 @@ fn test() {
     let user3 = Address::random(&e);
     let token = create_token(&e, &admin1);
 
-    token.mint(&user1, &1000);
+    token.mint(&admin1, &user1, &1000);
     assert_eq!(
         e.recorded_top_authorizations(),
         std::vec![(
             admin1.clone(),
             token.contract_id.clone(),
             Symbol::short("mint"),
-            (&user1, 1000_i128).into_val(&e),
+            (&admin1, &user1, 1000_i128).into_val(&e),
         )]
     );
     assert_eq!(token.balance(&user1), 1000);
 
-    token.increase_allowance(&user2, &user3, &500);
+    token.incr_allow(&user2, &user3, &500);
     assert_eq!(
         e.recorded_top_authorizations(),
         std::vec![(
             user2.clone(),
             token.contract_id.clone(),
-            Symbol::new(&e, "increase_allowance"),
+            Symbol::new(&e, "incr_allow"),
             (&user2, &user3, 500_i128).into_val(&e),
         )]
     );
     assert_eq!(token.allowance(&user2, &user3), 500);
 
-    token.transfer(&user1, &user2, &600);
+    token.xfer(&user1, &user2, &600);
     assert_eq!(
         e.recorded_top_authorizations(),
         std::vec![(
             user1.clone(),
             token.contract_id.clone(),
-            Symbol::short("transfer"),
+            Symbol::short("xfer"),
             (&user1, &user2, 600_i128).into_val(&e),
         )]
     );
     assert_eq!(token.balance(&user1), 400);
     assert_eq!(token.balance(&user2), 600);
 
-    token.transfer_from(&user3, &user2, &user1, &400);
+    token.xfer_from(&user3, &user2, &user1, &400);
     assert_eq!(
         e.recorded_top_authorizations(),
         std::vec![(
             user3.clone(),
             token.contract_id.clone(),
-            Symbol::new(&e, "transfer_from"),
+            Symbol::short("xfer_from"),
             (&user3, &user2, &user1, 400_i128).into_val(&e),
         )]
     );
     assert_eq!(token.balance(&user1), 800);
     assert_eq!(token.balance(&user2), 200);
 
-    token.transfer(&user1, &user3, &300);
+    token.xfer(&user1, &user3, &300);
     assert_eq!(token.balance(&user1), 500);
     assert_eq!(token.balance(&user3), 300);
 
-    token.set_admin(&admin2);
+    token.set_admin(&admin1, &admin2);
     assert_eq!(
         e.recorded_top_authorizations(),
         std::vec![(
             admin1.clone(),
             token.contract_id.clone(),
             Symbol::short("set_admin"),
-            (&admin2,).into_val(&e), //THIS DOESN'T WORK
+            (&admin1, &admin2).into_val(&e),
         )]
     );
 
-    token.set_authorized(&user2, &false);
+    token.set_auth(&admin2, &user2, &false);
     assert_eq!(
         e.recorded_top_authorizations(),
         std::vec![(
             admin2.clone(),
             token.contract_id.clone(),
-            Symbol::new(&e, "set_authorized"),
-            (&user2, false).into_val(&e),
+            Symbol::short("set_auth"),
+            (&admin2, &user2, false).into_val(&e),
         )]
     );
     assert_eq!(token.authorized(&user2), false);
 
-    token.set_authorized(&user3, &true);
+    token.set_auth(&admin2, &user3, &true);
     assert_eq!(token.authorized(&user3), true);
 
-    token.clawback(&user3, &100);
+    token.clawback(&admin2, &user3, &100);
     assert_eq!(
         e.recorded_top_authorizations(),
         std::vec![(
             admin2.clone(),
             token.contract_id.clone(),
             Symbol::short("clawback"),
-            (&user3, 100_i128).into_val(&e),
+            (&admin2, &user3, 100_i128).into_val(&e),
         )]
     );
     assert_eq!(token.balance(&user3), 200);
 
     // Increase by 400, with an existing 100 = 500
-    token.increase_allowance(&user2, &user3, &400);
+    token.incr_allow(&user2, &user3, &400);
     assert_eq!(token.allowance(&user2, &user3), 500);
-    token.decrease_allowance(&user2, &user3, &501);
+    token.decr_allow(&user2, &user3, &501);
     assert_eq!(
         e.recorded_top_authorizations(),
         std::vec![(
             user2.clone(),
             token.contract_id.clone(),
-            Symbol::new(&e, "decrease_allowance"),
+            Symbol::new(&e, "decr_allow"),
             (&user2, &user3, 501_i128).into_val(&e),
         )]
     );
@@ -140,6 +140,7 @@ fn token_plz() {
     let token = create_token(&e, &admin);
 
     token.token_plz(&user);
+
     assert_eq!(
         e.recorded_top_authorizations(),
         std::vec![(
@@ -161,10 +162,10 @@ fn test_burn() {
     let user2 = Address::random(&e);
     let token = create_token(&e, &admin);
 
-    token.mint(&user1, &1000);
+    token.mint(&admin, &user1, &1000);
     assert_eq!(token.balance(&user1), 1000);
 
-    token.increase_allowance(&user1, &user2, &500);
+    token.incr_allow(&user1, &user2, &500);
     assert_eq!(token.allowance(&user1, &user2), 500);
 
     token.burn_from(&user2, &user1, &500);
@@ -197,54 +198,54 @@ fn test_burn() {
 
 #[test]
 #[should_panic(expected = "insufficient balance")]
-fn transfer_insufficient_balance() {
+fn xfer_insufficient_balance() {
     let e: Env = Default::default();
     let admin = Address::random(&e);
     let user1 = Address::random(&e);
     let user2 = Address::random(&e);
     let token = create_token(&e, &admin);
 
-    token.mint(&user1, &1000);
+    token.mint(&admin, &user1, &1000);
     assert_eq!(token.balance(&user1), 1000);
 
-    token.transfer(&user1, &user2, &1001);
+    token.xfer(&user1, &user2, &1001);
 }
 
 #[test]
 #[should_panic(expected = "can't receive when deauthorized")]
-fn transfer_receive_deauthorized() {
+fn xfer_receive_deauthorized() {
     let e: Env = Default::default();
     let admin = Address::random(&e);
     let user1 = Address::random(&e);
     let user2 = Address::random(&e);
     let token = create_token(&e, &admin);
 
-    token.mint(&user1, &1000);
+    token.mint(&admin, &user1, &1000);
     assert_eq!(token.balance(&user1), 1000);
 
-    token.set_authorized(&user2, &false);
-    token.transfer(&user1, &user2, &1);
+    token.set_auth(&admin, &user2, &false);
+    token.xfer(&user1, &user2, &1);
 }
 
 #[test]
 #[should_panic(expected = "can't spend when deauthorized")]
-fn transfer_spend_deauthorized() {
+fn xfer_spend_deauthorized() {
     let e: Env = Default::default();
     let admin = Address::random(&e);
     let user1 = Address::random(&e);
     let user2 = Address::random(&e);
     let token = create_token(&e, &admin);
 
-    token.mint(&user1, &1000);
+    token.mint(&admin, &user1, &1000);
     assert_eq!(token.balance(&user1), 1000);
 
-    token.set_authorized(&user1, &false);
-    token.transfer(&user1, &user2, &1);
+    token.set_auth(&admin, &user1, &false);
+    token.xfer(&user1, &user2, &1);
 }
 
 #[test]
 #[should_panic(expected = "insufficient allowance")]
-fn transfer_from_insufficient_allowance() {
+fn xfer_from_insufficient_allowance() {
     let e: Env = Default::default();
     let admin = Address::random(&e);
     let user1 = Address::random(&e);
@@ -252,13 +253,13 @@ fn transfer_from_insufficient_allowance() {
     let user3 = Address::random(&e);
     let token = create_token(&e, &admin);
 
-    token.mint(&user1, &1000);
+    token.mint(&admin, &user1, &1000);
     assert_eq!(token.balance(&user1), 1000);
 
-    token.increase_allowance(&user1, &user3, &100);
+    token.incr_allow(&user1, &user3, &100);
     assert_eq!(token.allowance(&user1, &user3), 100);
 
-    token.transfer_from(&user3, &user1, &user2, &101);
+    token.xfer_from(&user3, &user1, &user2, &101);
 }
 
 #[test]
