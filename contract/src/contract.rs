@@ -170,6 +170,7 @@ impl TokenTrait for Token {
     /// This function is only callable by the contract administrator.
     ///
     /// # Arguments
+    /// * `admin` - The Address of the contract administrator
     /// * `to` - The Address to mint tokens to
     /// * `amount` - The amount of smallest possible token fractions to mint (remember to multiply
     ///   by `decimals` to get the actual amount of tokens to mint)

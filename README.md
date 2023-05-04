@@ -35,7 +35,7 @@ The Abundance Token source code lives in [./contract](./contract). If you want t
 
 3. Now add an alias to your shell, maybe in your `.zprofile` (zsh) or `.bash_profile` (bash) or equivalent for your system:
 
-       alias abundance="soroban contract invoke --network futurenet --id 2ee6f8dfab444b6539ce7a328a2ea39a7d26a86bcba58ca36133d08b259839a3 --"
+       alias abundance="soroban contract invoke --network futurenet --id 2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de --"
 
 4. Check that it worked:
 

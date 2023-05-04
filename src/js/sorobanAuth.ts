@@ -1,7 +1,7 @@
 import { getNetworkDetails, getPublicKey, isConnected } from "@stellar/freighter-api";
 import render from './render'
 
-const ABUNDANCE_TOKEN_ID = '2ee6f8dfab444b6539ce7a328a2ea39a7d26a86bcba58ca36133d08b259839a3'
+const ABUNDANCE_TOKEN_ID = '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de'
 const RPC_URL = 'https://horizon-futurenet.stellar.org'
 const FRIENDBOT_URL = 'https://friendbot-futurenet.stellar.org'
 
