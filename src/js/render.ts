@@ -1,4 +1,5 @@
 import { fill, hide, show } from './domHelpers'
+import { getSymbol } from './contract'
 
 /**
  * update the html based on user & data state
@@ -19,13 +20,16 @@ export default async function render () {
   const readyToGo = window.hasFreighter && window.sorobanUserAddress && window.xlmBalance
 
   if (readyToGo) {
+    const sym = await getSymbol()
+    console.log({sym})
+    // fill('tokenSymbol').with(sym)
+    // const tokenBalance = await getBalance({ id: window.sorobanUserAddress })
+    // fill('tokenBalance').with(tokenBalance)
+
     hide('gettingStarted')
     show('allReady')
   } else {
     hide('allReady')
     show('gettingStarted')
   }
-
-  // const tokenBalance = (await window.token.balanceOf(window.sorobanUserAddress)).toNumber()
-  // fill('tokenBalance').with(formatLargeNum(tokenBalance))
 }
