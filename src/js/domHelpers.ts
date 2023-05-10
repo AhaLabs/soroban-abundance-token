@@ -1,3 +1,6 @@
+import { tokenPlz } from './contract'
+import render from './render'
+
 /**
  * Get all elements with `data-behavior` matching given `selector`, with type
  * cast to HTMLElement rather than generic Element
@@ -60,8 +63,9 @@ export const initDOMhandlers = () => {
     })
   });
 
-  (document.querySelector('[data-behavior=mint]') as HTMLFormElement).onclick = async (event) => {
-    alert('uh oh, not implemented yet')
+  (document.querySelector('[data-behavior=mint]') as HTMLFormElement).onclick = async () => {
+    await tokenPlz({ id: window.sorobanUserAddress! })
+    render()
   }
 
   /**

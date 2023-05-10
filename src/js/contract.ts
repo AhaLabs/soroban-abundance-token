@@ -1,12 +1,19 @@
+import { signTransaction } from '@stellar/freighter-api'
 import * as SorobanClient from 'soroban-client'
 import { RPC_URL } from './constants'
 import { Buffer } from "buffer";
+import type {Memo, MemoType, Operation, Transaction} from 'soroban-client';
 window.Buffer = window.Buffer || Buffer;
 
 const ABUNDANCE_TOKEN_ID = '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de'
 const server = new SorobanClient.Server(RPC_URL);
 
-async function invoke(method: string, ...args: any[]) {
+type Tx = Transaction<Memo<MemoType>, Operation[]>
+
+async function invoke(
+  { method, args = [], getFootprint = true }:
+  { method: string, args?: any[], getFootprint?: boolean }
+) {
   if (!window.freighterNetwork || !window.sorobanUserAddress) {
     throw new Error("Freighter not initialized");
   }
@@ -15,24 +22,58 @@ async function invoke(method: string, ...args: any[]) {
 
   const account = new SorobanClient.Account(window.sorobanUserAddress, '0')
 
-  const transaction = new SorobanClient.TransactionBuilder(account, {
+  let tx = new SorobanClient.TransactionBuilder(account, {
       fee: '0',
       networkPassphrase: window.freighterNetwork.networkPassphrase,
   })
     .addOperation(contract.call(method, ...args))
     .setTimeout(SorobanClient.TimeoutInfinite)
-    .build();
+    .build()
 
-  const { results } = await server.simulateTransaction(transaction)
-  if (!results || results[0] === undefined) {
-      throw new Error("Invalid response from simulateTransaction");
+  if (getFootprint) {
+    // Simulate the tx to discover the storage footprint, and update the
+    // tx to include it. If you already know the storage footprint you
+    // can use `addFootprint` to add it yourself, skipping this step.
+    tx = await server.prepareTransaction(tx) as Tx
+
+    console.log('prepared transaction:', tx)
+    debugger
+
+    // sign with Freighter
+    // FIXME: currently fails with:
+    //
+    //     XDR Read Error: Unknown OperationType member for value 24
+    const signed = await signTransaction(tx.toXDR())
+
+    // re-assemble with signed tx
+    tx = SorobanClient.TransactionBuilder.fromXDR(
+      signed,
+      window.freighterNetwork.networkPassphrase
+    ) as Tx
+
+    const txResponse = await server.sendTransaction(tx);
+
+    const result = txResponse.errorResultXdr
+
+    if (!result) {
+        throw new Error("Invalid response from sendTransaction");
+    }
+    return SorobanClient.xdr.ScVal.fromXDR(Buffer.from(result, 'base64'));
   }
-  const result = results[0];
-  return SorobanClient.xdr.ScVal.fromXDR(Buffer.from(result.xdr, 'base64'));
+
+  const { results } = await server.simulateTransaction(tx)
+  if (!results || results[0] === undefined) {
+      throw new Error("Invalid response from simulateTransaction")
+  }
+  const result = results[0]
+  return SorobanClient.xdr.ScVal.fromXDR(Buffer.from(result.xdr, 'base64'))
 }
 
 export async function getSymbol(): Promise<string> {
-  return (await invoke('symbol'))?.value()?.toString() ?? ''
+  return (await invoke({
+    method: 'symbol',
+    getFootprint: false,
+  }))?.value()?.toString() ?? ''
 }
 
 function i128ScValToBigInt(scVal: SorobanClient.xdr.ScVal): bigint {
@@ -48,9 +89,23 @@ export async function getBalance({ id }: { id: string }): Promise<bigint> {
       '  getBalance({ id: "G..." })`'
     )
   }
-  const scVal = await invoke(
-    'balance',
-    SorobanClient.Address.fromString(id).toScVal()
-  )
+  const scVal = await invoke({
+    method: 'balance',
+    args: [SorobanClient.Address.fromString(id).toScVal()],
+    getFootprint: false,
+  })
   return i128ScValToBigInt(scVal)
+}
+
+export async function tokenPlz({ id = "" }): Promise<void> {
+  if (!id) {
+    throw new Error(
+      'You need to specify an account `id` for which to mint a token:\n\n' +
+      '  tokenPlz({ id: "G..." })`'
+    )
+  }
+  await invoke({
+    method: 'token_plz',
+    args: [SorobanClient.Address.fromString(id).toScVal()],
+  })
 }
