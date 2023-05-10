@@ -1,26 +1,24 @@
 import { getNetworkDetails, getPublicKey, isConnected } from "@stellar/freighter-api";
 import render from './render'
-import { RPC_URL } from './constants'
-
-const FRIENDBOT_URL = 'https://friendbot-futurenet.stellar.org'
+import { HORIZON_URL, FRIENDBOT_URL } from './constants'
 
 /**
- * Fetch account from {@link RPC_URL}.
+ * Fetch account from {@link HORIZON_URL}.
  * If RPC returns 404 or 405, then the account has not yet been created/funded.
  * In that case, hit {@link FRIENDBOT_URL} to fund it, then re-query RPC to get
  * its up-to-date balance.
  */
 async function getAccountBalance(publicKey: string): Promise<number> {
-  const account = await fetch(`${RPC_URL}/accounts/${publicKey}`).then(async res => {
+  const account = await fetch(`${HORIZON_URL}/accounts/${publicKey}`).then(async res => {
     if (res.ok) return res.json()
 
     if (/40(4|5)/.test(String(res.status))) {
       await fetch(`${FRIENDBOT_URL}?addr=${publicKey}`)
-      return await fetch(`${RPC_URL}/accounts/${publicKey}`).then(res => res.json())
+      return await fetch(`${HORIZON_URL}/accounts/${publicKey}`).then(res => res.json())
     }
 
     throw new Error(
-      `Failed to fetch account from ${RPC_URL}
+      `Failed to fetch account from ${HORIZON_URL}
 
       Got status ${res.status} ${res.statusText}
 
