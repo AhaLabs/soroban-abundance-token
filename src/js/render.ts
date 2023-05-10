@@ -20,9 +20,8 @@ export default async function render () {
   const readyToGo = window.hasFreighter && window.sorobanUserAddress && window.xlmBalance
 
   if (readyToGo) {
-    const sym = await getSymbol()
-    console.log({sym})
-    // fill('tokenSymbol').with(sym)
+    const sym = (await getSymbol())?.value()?.toString()
+    if (sym) fill('tokenSymbol').with(sym)
     // const tokenBalance = await getBalance({ id: window.sorobanUserAddress })
     // fill('tokenBalance').with(tokenBalance)
 
