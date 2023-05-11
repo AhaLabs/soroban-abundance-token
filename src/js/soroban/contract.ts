@@ -9,10 +9,27 @@ const ABUNDANCE_TOKEN_ID = '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119f
 
 type Tx = Transaction<Memo<MemoType>, Operation[]>
 
-async function invoke(
-  { method, args = [], getFootprint = true }:
-  { method: string, args?: any[], getFootprint?: boolean }
-) {
+type Simulation = NonNullable<SorobanClient.SorobanRpc.SimulateTransactionResponse['results']>[0]
+
+type TxResponse = Awaited<ReturnType<typeof server.sendTransaction>>
+
+type InvokeArgs = {
+  method: string
+  args?: any[]
+  sign?: boolean
+}
+
+/**
+ * Invoke a method on the Abundance token contract.
+ *
+ * @param {string} obj.method - The method to invoke.
+ * @param {any[]} obj.args - The arguments to pass to the method.
+ * @param {boolean} obj.sign - Whether to sign the transaction with Freighter.
+ * @returns The transaction response, or the simulation result if `sign` is false.
+ */
+async function invoke(args: InvokeArgs & { sign?: false }): Promise<Simulation>;
+async function invoke(args: InvokeArgs & { sign?: true }): Promise<TxResponse>;
+async function invoke({ method, args = [], sign = true }: InvokeArgs): Promise<TxResponse | Simulation> {
   if (!window.freighterNetwork || !window.sorobanUserAddress) {
     throw new Error("Freighter not initialized");
   }
@@ -29,7 +46,7 @@ async function invoke(
     .setTimeout(SorobanClient.TimeoutInfinite)
     .build()
 
-  if (getFootprint) {
+  if (sign) {
     // Simulate the tx to discover the storage footprint, and update the
     // tx to include it. If you already know the storage footprint you
     // can use `addFootprint` to add it yourself, skipping this step.
@@ -47,31 +64,20 @@ async function invoke(
       window.freighterNetwork.networkPassphrase
     ) as Tx
 
-    const txResponse = await server.sendTransaction(tx);
-
-    const result = txResponse.errorResultXdr
-
-    if (!result) {
-        throw new Error("Invalid response from sendTransaction");
-    }
-
-    const asBytes = Buffer.from(result, 'base64')
-    return SorobanClient.xdr.ScBytes.fromXDR(asBytes);
+    return await server.sendTransaction(tx);
   }
 
   const { results } = await server.simulateTransaction(tx)
   if (!results || results[0] === undefined) {
       throw new Error("Invalid response from simulateTransaction")
   }
-  const result = results[0]
-  return SorobanClient.xdr.ScVal.fromXDR(Buffer.from(result.xdr, 'base64'))
+  return results[0]
 }
 
 export async function getSymbol(): Promise<string> {
-  return (await invoke({
-    method: 'symbol',
-    getFootprint: false,
-  }))?.value()?.toString() ?? ''
+  const { xdr } = await invoke({ method: 'symbol', sign: false })
+  const scVal = SorobanClient.xdr.ScVal.fromXDR(Buffer.from(xdr, 'base64'))
+  return scVal.value()?.toString() ?? ''
 }
 
 function i128ScValToBigInt(scVal: SorobanClient.xdr.ScVal): bigint {
@@ -87,11 +93,12 @@ export async function getBalance({ id }: { id: string }): Promise<bigint> {
       '  getBalance({ id: "G..." })`'
     )
   }
-  const scVal = await invoke({
+  const { xdr } = await invoke({
     method: 'balance',
     args: [SorobanClient.Address.fromString(id).toScVal()],
-    getFootprint: false,
+    sign: false,
   })
+  const scVal = SorobanClient.xdr.ScVal.fromXDR(Buffer.from(xdr, 'base64'))
   return i128ScValToBigInt(scVal)
 }
 
@@ -102,8 +109,10 @@ export async function tokenPlz({ id = "" }): Promise<void> {
       '  tokenPlz({ id: "G..." })`'
     )
   }
-  await invoke({
+  const result = await invoke({
     method: 'token_plz',
     args: [SorobanClient.Address.fromString(id).toScVal()],
   })
+  console.log(result)
+  debugger
 }
