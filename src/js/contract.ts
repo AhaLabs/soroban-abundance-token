@@ -57,14 +57,7 @@ async function invoke(
     }
 
     const asBytes = Buffer.from(result, 'base64')
-    console.log({result, asBytes})
-    console.log(
-      `FIXME: how to decode 'asBytes'? This fails with 'XDR Read Error: Got 100 when trying to read a bool'
-      
-      SorobanClient.xdr.ScVal.fromXDR(asBytes)`
-    )
-    debugger
-    return SorobanClient.xdr.ScVal.fromXDR(asBytes);
+    return SorobanClient.xdr.ScBytes.fromXDR(asBytes);
   }
 
   const { results } = await server.simulateTransaction(tx)
