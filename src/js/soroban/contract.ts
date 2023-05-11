@@ -119,5 +119,16 @@ export async function tokenPlz({ id = "" }): Promise<void> {
     `that failed, but why? how do we decode this? maybe something like this?
     SorobanClient.xdr.ScBytes.fromXDR(Buffer.from(result.errorResultXdr, 'base64'))`
   )
+  const xdr = result.errorResultXdr && Buffer.from(result.errorResultXdr, 'base64')
+  xdr && Object.entries(SorobanClient.xdr).forEach(([key, value]) => {
+    if (typeof value === 'object' && 'fromXDR' in value) {
+      try {
+        const decoded = value.fromXDR(xdr).toString()
+        console.log({ trying_to_decode_as: key, decoded })
+      } catch (e) {
+        // ignore
+      }
+    }
+  })
   debugger
 }
