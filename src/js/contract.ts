@@ -34,16 +34,13 @@ async function invoke(
     // Simulate the tx to discover the storage footprint, and update the
     // tx to include it. If you already know the storage footprint you
     // can use `addFootprint` to add it yourself, skipping this step.
-    tx = await server.prepareTransaction(tx) as Tx
-
-    console.log('prepared transaction:', tx)
-    debugger
+    tx = await server.prepareTransaction(tx, window.freighterNetwork.networkPassphrase) as Tx
 
     // sign with Freighter
-    // FIXME: currently fails with:
-    //
-    //     XDR Read Error: Unknown OperationType member for value 24
-    const signed = await signTransaction(tx.toXDR())
+    const signed = await signTransaction(tx.toXDR(), {
+      network: window.freighterNetwork.network,
+      networkPassphrase: window.freighterNetwork.networkPassphrase,
+    })
 
     // re-assemble with signed tx
     tx = SorobanClient.TransactionBuilder.fromXDR(
@@ -58,7 +55,16 @@ async function invoke(
     if (!result) {
         throw new Error("Invalid response from sendTransaction");
     }
-    return SorobanClient.xdr.ScVal.fromXDR(Buffer.from(result, 'base64'));
+
+    const asBytes = Buffer.from(result, 'base64')
+    console.log({result, asBytes})
+    console.log(
+      `FIXME: how to decode 'asBytes'? This fails with 'XDR Read Error: Got 100 when trying to read a bool'
+      
+      SorobanClient.xdr.ScVal.fromXDR(asBytes)`
+    )
+    debugger
+    return SorobanClient.xdr.ScVal.fromXDR(asBytes);
   }
 
   const { results } = await server.simulateTransaction(tx)
