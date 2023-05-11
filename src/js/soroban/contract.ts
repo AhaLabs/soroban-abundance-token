@@ -27,8 +27,9 @@ type InvokeArgs = {
  * @param {boolean} obj.sign - Whether to sign the transaction with Freighter.
  * @returns The transaction response, or the simulation result if `sign` is false.
  */
-async function invoke(args: InvokeArgs & { sign?: false }): Promise<Simulation>;
-async function invoke(args: InvokeArgs & { sign?: true }): Promise<TxResponse>;
+async function invoke(args: InvokeArgs & { sign: false }): Promise<Simulation>;
+async function invoke(args: InvokeArgs & { sign: true }): Promise<TxResponse>;
+async function invoke(args: InvokeArgs & { sign?: undefined }): Promise<TxResponse>;
 async function invoke({ method, args = [], sign = true }: InvokeArgs): Promise<TxResponse | Simulation> {
   if (!window.freighterNetwork || !window.sorobanUserAddress) {
     throw new Error("Freighter not initialized");
@@ -114,5 +115,9 @@ export async function tokenPlz({ id = "" }): Promise<void> {
     args: [SorobanClient.Address.fromString(id).toScVal()],
   })
   console.log(result)
+  console.log(
+    `that failed, but why? how do we decode this? maybe something like this?
+    SorobanClient.xdr.ScBytes.fromXDR(Buffer.from(result.errorResultXdr, 'base64'))`
+  )
   debugger
 }
