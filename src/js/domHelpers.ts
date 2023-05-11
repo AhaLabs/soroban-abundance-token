@@ -1,4 +1,4 @@
-import { tokenPlz } from './contract'
+import { tokenPlz } from './soroban/contract'
 import render from './render'
 
 /**
@@ -13,11 +13,11 @@ const getAll = (selector: string) => Array.from(document.querySelectorAll(`[data
  * You can `fill('thing').with('whatever')` to set the innerHTML
  */
 export const fill = (selector: string) => ({
-  with: (content: string) =>
+  with: (content: string | number | bigint) =>
     getAll(selector).forEach(n => {
-      n.innerHTML = content
+      n.innerHTML = `${content}`
       if (n.className.match('clip')) {
-        n.title = content
+        n.title = `${content}`
       }
     })
 })

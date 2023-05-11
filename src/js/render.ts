@@ -1,12 +1,10 @@
 import { fill, hide, show } from './domHelpers'
-import { getBalance, getSymbol } from './contract'
+import { getBalance, getSymbol } from './soroban/contract'
 
 /**
  * update the html based on user & data state
  */
 export default async function render () {
-  fill('tokenSymbol').with(window.tokenSymbol)
-
   if (window.hasFreighter) {
     document.querySelector('#getFreighter')!.className = 'done'
   }
@@ -17,7 +15,7 @@ export default async function render () {
     document.querySelector('#selectFuturenet')!.className = 'done'
   }
 
-  const readyToGo = window.hasFreighter && window.sorobanUserAddress && window.xlmBalance
+  const readyToGo = window.hasFreighter && window.sorobanUserAddress
 
   if (readyToGo) {
     fill('tokenSymbol').with(await getSymbol())

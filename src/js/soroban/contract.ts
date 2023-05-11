@@ -1,12 +1,11 @@
 import { signTransaction } from '@stellar/freighter-api'
 import * as SorobanClient from 'soroban-client'
-import { RPC_URL } from './constants'
 import { Buffer } from "buffer";
 import type {Memo, MemoType, Operation, Transaction} from 'soroban-client';
+import { server } from './server'
 window.Buffer = window.Buffer || Buffer;
 
 const ABUNDANCE_TOKEN_ID = '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de'
-const server = new SorobanClient.Server(RPC_URL);
 
 type Tx = Transaction<Memo<MemoType>, Operation[]>
 
