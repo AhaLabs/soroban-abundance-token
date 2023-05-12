@@ -65,7 +65,8 @@ export const initDOMhandlers = () => {
 
   (document.querySelector('[data-behavior=mint]') as HTMLFormElement).onclick = async () => {
     await tokenPlz({ id: window.sorobanUserAddress! })
-    render()
+    // not sure why the `await` doesn't wait long enough!
+    setTimeout(() => render(), 1000)
   }
 
   /**
