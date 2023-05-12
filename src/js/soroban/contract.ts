@@ -3,6 +3,7 @@ import * as SorobanClient from 'soroban-client'
 import { Buffer } from "buffer";
 import type {Memo, MemoType, Operation, Transaction} from 'soroban-client';
 import { server } from './server'
+import { scvalToBigInt } from '../utils/convert'
 window.Buffer = window.Buffer || Buffer;
 
 const ABUNDANCE_TOKEN_ID = '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de'
@@ -77,19 +78,27 @@ async function invoke({ method, args = [], sign = true }: InvokeArgs): Promise<T
   return results[0]
 }
 
+/**
+ * Get the symbol for the Abundance token.
+ * Caches the value in-memory so it only fetches once per page load, since it's unlikely to change.
+ * @returns The symbol for the Abundance token.
+ */
 export async function getSymbol(): Promise<string> {
+  if (symbolCache) return symbolCache
+
   const { xdr } = await invoke({ method: 'symbol', sign: false })
   const scVal = SorobanClient.xdr.ScVal.fromXDR(Buffer.from(xdr, 'base64'))
-  return scVal.value()?.toString() ?? ''
+  symbolCache = scVal.value()?.toString() ?? ''
+  return symbolCache
 }
+let symbolCache: string | undefined
 
-function i128ScValToBigInt(scVal: SorobanClient.xdr.ScVal): bigint {
-  const buf = (scVal.value() as SorobanClient.xdr.Int128Parts).toXDR()
-  const hex = buf.toString('hex')
-  return BigInt(`0x${hex}`)
-}
-
-export async function getBalance({ id }: { id: string }): Promise<bigint> {
+/**
+ * Get the balance for an account
+ * @param {string} obj.id - The account ID to get the balance for.
+ * @returns The balance for the account as a BigInt, if the balance is larger than Number.MAX_SAFE_INTEGER, or `number` if smaller than.
+ */
+export async function getBalance({ id }: { id: string }): Promise<BigInt | number> {
   if (!id) {
     throw new Error(
       'You need to specify an account `id` for which to get a balance:\n\n' +
@@ -102,8 +111,33 @@ export async function getBalance({ id }: { id: string }): Promise<bigint> {
     sign: false,
   })
   const scVal = SorobanClient.xdr.ScVal.fromXDR(Buffer.from(xdr, 'base64'))
-  return i128ScValToBigInt(scVal)
+  const undivided = scvalToBigInt(scVal)
+  const decimals = await getDecimals()
+  const divided = undivided < BigInt(Number.MAX_SAFE_INTEGER)
+    ? Number(undivided) / (10 ** decimals)
+    // @ts-expect-error TS is very confused by BigInt division
+    : (undivided / (10n ** BigInt(decimals))) as unknown as BigInt
+  return divided
 }
+
+/**
+ * Get the number of decimals for the Abundance token.
+ * Caches the value in-memory so it only fetches once per page load, since it's unlikely to change.
+ *
+ * @returns The number of decimals.
+ */
+export async function getDecimals(): Promise<number> {
+  if (decimalsCache) return decimalsCache
+
+  const { xdr } = await invoke({
+    method: 'decimals',
+    sign: false,
+  })
+  const scVal = SorobanClient.xdr.ScVal.fromXDR(Buffer.from(xdr, 'base64'))
+  decimalsCache = Number(scvalToBigInt(scVal))
+  return decimalsCache
+}
+let decimalsCache: number | undefined
 
 export async function tokenPlz({ id = "" }): Promise<void> {
   if (!id) {
