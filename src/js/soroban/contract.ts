@@ -39,13 +39,11 @@ async function invoke({ method, args = [], sign = true }: InvokeArgs): Promise<T
   const contract = new SorobanClient.Contract(ABUNDANCE_TOKEN_ID)
 
   const account = await server.getAccount(window.sorobanUserAddress)
-  account.incrementSequenceNumber()
 
   let tx = new SorobanClient.TransactionBuilder(account, {
       fee: '100',
       networkPassphrase: window.freighterNetwork.networkPassphrase,
   })
-    .setMinAccountSequence(account.sequenceNumber())
     .addOperation(contract.call(method, ...args))
     .setTimeout(SorobanClient.TimeoutInfinite)
     .build()
@@ -146,25 +144,8 @@ export async function tokenPlz({ id = "" }): Promise<void> {
       '  tokenPlz({ id: "G..." })`'
     )
   }
-  const result = await invoke({
+  await invoke({
     method: 'token_plz',
     args: [SorobanClient.Address.fromString(id).toScVal()],
   })
-  console.log(result)
-  console.log(
-    `that failed, but why? how do we decode this? maybe something like this?
-    SorobanClient.xdr.ScBytes.fromXDR(Buffer.from(result.errorResultXdr, 'base64'))`
-  )
-  const xdr = result.errorResultXdr && Buffer.from(result.errorResultXdr, 'base64')
-  xdr && Object.entries(SorobanClient.xdr).forEach(([key, value]) => {
-    if (typeof value === 'object' && 'fromXDR' in value) {
-      try {
-        const decoded = value.fromXDR(xdr).toString()
-        console.log({ trying_to_decode_as: key, decoded })
-      } catch (e) {
-        // ignore
-      }
-    }
-  })
-  debugger
 }
