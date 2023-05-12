@@ -37,12 +37,14 @@ async function invoke({ method, args = [], sign = true }: InvokeArgs): Promise<T
 
   const contract = new SorobanClient.Contract(ABUNDANCE_TOKEN_ID)
 
-  const account = new SorobanClient.Account(window.sorobanUserAddress, '0')
+  const account = await server.getAccount(window.sorobanUserAddress)
+  account.incrementSequenceNumber()
 
   let tx = new SorobanClient.TransactionBuilder(account, {
-      fee: '0',
+      fee: '100',
       networkPassphrase: window.freighterNetwork.networkPassphrase,
   })
+    .setMinAccountSequence(account.sequenceNumber())
     .addOperation(contract.call(method, ...args))
     .setTimeout(SorobanClient.TimeoutInfinite)
     .build()
