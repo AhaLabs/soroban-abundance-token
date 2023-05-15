@@ -1,5 +1,5 @@
 import { fill, hide, show } from './domHelpers'
-import { getContract } from './soroban/contract'
+import { symbol, balance } from 'abundance-token'
 
 /**
  * update the html based on user & data state
@@ -18,10 +18,9 @@ export default async function render() {
   const readyToGo = window.hasFreighter && window.sorobanUserAddress
 
   if (readyToGo) {
-    let contract = getContract();
-    fill('tokenSymbol').with(await contract.symbol())
+    fill('tokenSymbol').with(await symbol())
     //@ts-ignore
-    fill('tokenBalance').with(await contract.balance({ id: window.sorobanUserAddress! }))
+    fill('tokenBalance').with(await balance({ id: window.sorobanUserAddress! }))
 
     hide('gettingStarted')
     show('allReady')

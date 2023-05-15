@@ -1,12 +1,14 @@
-import { signTransaction } from '@stellar/freighter-api'
+import {
+  isConnected,
+  getPublicKey,
+  signTransaction,
+} from "@stellar/freighter-api";
 import * as SorobanClient from 'soroban-client'
 import { Buffer } from "buffer";
-import type { Memo, MemoType, Operation, Transaction } from 'soroban-client';
+import type { Account, Memo, MemoType, Operation, Transaction } from 'soroban-client';
+import { NETWORK_NAME, NETWORK_PASSPHRASE, CONTRACT_ID } from './constants'
 import { server } from './server'
-import * as contract from "abundance-token"
 window.Buffer = window.Buffer || Buffer;
-
-const ABUNDANCE_TOKEN_ID = '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de'
 
 type Tx = Transaction<Memo<MemoType>, Operation[]>
 
@@ -21,6 +23,23 @@ type InvokeArgs = {
 }
 
 /**
+ * Get account details from the Soroban network for the publicKey currently
+ * selected in Freighter. If not connected to Freighter, throws errors. Will
+ * pop up Freighter's modal to request user permissions, if this hasn't been
+ * done already.
+ */
+export async function getAccount(): Promise<Account> {
+  if (!await isConnected()) {
+    throw new Error('Freighter not connected')
+  }
+  const publicKey = await getPublicKey()
+  if (!publicKey) {
+    throw new Error('Freighter not initialized')
+  }
+  return await server.getAccount(publicKey)
+}
+
+/**
  * Invoke a method on the Abundance token contract.
  *
  * @param {string} obj.method - The method to invoke.
@@ -28,21 +47,17 @@ type InvokeArgs = {
  * @param {boolean} obj.sign - Whether to sign the transaction with Freighter.
  * @returns The transaction response, or the simulation result if `sign` is false.
  */
-async function invoke(args: InvokeArgs & { sign: false }): Promise<Simulation>;
-async function invoke(args: InvokeArgs & { sign: true }): Promise<TxResponse>;
-async function invoke(args: InvokeArgs & { sign?: undefined }): Promise<TxResponse>;
-async function invoke({ method, args = [], sign = true }: InvokeArgs): Promise<TxResponse | Simulation> {
-  if (!window.freighterNetwork || !window.sorobanUserAddress) {
-    throw new Error("Freighter not initialized");
-  }
+export async function invoke(args: InvokeArgs & { sign: false }): Promise<Simulation>;
+export async function invoke(args: InvokeArgs & { sign: true }): Promise<TxResponse>;
+export async function invoke(args: InvokeArgs & { sign?: undefined }): Promise<TxResponse>;
+export async function invoke({ method, args = [], sign = true }: InvokeArgs): Promise<TxResponse | Simulation> {
+  const account = await getAccount()
 
-  const contract = new SorobanClient.Contract(ABUNDANCE_TOKEN_ID)
-
-  const account = await server.getAccount(window.sorobanUserAddress)
+  const contract = new SorobanClient.Contract(CONTRACT_ID)
 
   let tx = new SorobanClient.TransactionBuilder(account, {
     fee: '100',
-    networkPassphrase: window.freighterNetwork.networkPassphrase,
+    networkPassphrase: NETWORK_PASSPHRASE,
   })
     .addOperation(contract.call(method, ...args))
     .setTimeout(SorobanClient.TimeoutInfinite)
@@ -52,18 +67,18 @@ async function invoke({ method, args = [], sign = true }: InvokeArgs): Promise<T
     // Simulate the tx to discover the storage footprint, and update the
     // tx to include it. If you already know the storage footprint you
     // can use `addFootprint` to add it yourself, skipping this step.
-    tx = await server.prepareTransaction(tx, window.freighterNetwork.networkPassphrase) as Tx
+    tx = await server.prepareTransaction(tx, NETWORK_PASSPHRASE) as Tx
 
     // sign with Freighter
     const signed = await signTransaction(tx.toXDR(), {
-      network: window.freighterNetwork.network,
-      networkPassphrase: window.freighterNetwork.networkPassphrase,
+      network: NETWORK_NAME,
+      networkPassphrase: NETWORK_PASSPHRASE,
     })
 
     // re-assemble with signed tx
     tx = SorobanClient.TransactionBuilder.fromXDR(
       signed,
-      window.freighterNetwork.networkPassphrase
+      NETWORK_PASSPHRASE
     ) as Tx
 
     return await server.sendTransaction(tx);
@@ -74,9 +89,5 @@ async function invoke({ method, args = [], sign = true }: InvokeArgs): Promise<T
     throw new Error("Invalid response from simulateTransaction")
   }
   return results[0]
-}
-
-export function getContract(): contract.Contract {
-  return new contract.Contract({ invoke })
 }
 

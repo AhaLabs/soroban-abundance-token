@@ -1,6 +1,6 @@
 import { getNetworkDetails, getPublicKey, isConnected } from "@stellar/freighter-api";
 import render from '../render'
-import { server } from './server'
+import { server } from 'abundance-token'
 
 type RpcError = { code: number, message: string }
 
