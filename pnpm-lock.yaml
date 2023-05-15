@@ -4,6 +4,9 @@ dependencies:
   '@stellar/freighter-api':
     specifier: ^1.4.0
     version: 1.4.0
+  abundance-token:
+    specifier: ./contract/ts
+    version: link:contract/ts
   astro:
     specifier: ^2.3.1
     version: 2.3.1

@@ -3,7 +3,7 @@ import * as SorobanClient from 'soroban-client'
 import { Buffer } from "buffer";
 import type { Memo, MemoType, Operation, Transaction } from 'soroban-client';
 import { server } from './server'
-import * as contract from "../../../gen/contract"
+import * as contract from "abundance-token"
 window.Buffer = window.Buffer || Buffer;
 
 const ABUNDANCE_TOKEN_ID = '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de'
