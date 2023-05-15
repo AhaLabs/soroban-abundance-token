@@ -1,4 +1,4 @@
-import { tokenPlz } from './soroban/contract'
+import { getContract } from './soroban/contract'
 import render from './render'
 
 /**
@@ -64,7 +64,8 @@ export const initDOMhandlers = () => {
   });
 
   (document.querySelector('[data-behavior=mint]') as HTMLFormElement).onclick = async () => {
-    await tokenPlz({ id: window.sorobanUserAddress! })
+    let contract = getContract();
+    await contract.tokenPlz({ id: window.sorobanUserAddress! })
     // not sure why the `await` doesn't wait long enough!
     setTimeout(() => render(), 1000)
   }
