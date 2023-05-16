@@ -31,8 +31,8 @@ async function ensureAccountFunded(publicKey: string): Promise<void> {
 
 // on page load, check if user:
 // 1. has Freighter installed
-// 2. is logged in to Freighter
-// 3. selects Futurenet network
+// 2. is logged into Freighter
+// and make sure their account is funded
 (async () => {
   window.hasFreighter = await isConnected()
   if (window.hasFreighter) {
