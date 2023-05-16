@@ -28,7 +28,7 @@ export async function symbol(): Promise<string> {
   return scVal.value()?.toString() ?? ''
 }
 
-export async function balance({ id }: { id: string }): Promise<BigInt | number> {
+export async function balance({ id }: { id: string }): Promise<BigInt> {
   if (!id) {
     throw new Error(
       'You need to specify an account `id` for which to get a balance:\n\n' +
