@@ -3,4 +3,9 @@
   border-bottom: 1px solid var(--secondary);
   padding-left: 0.5em;
   padding-right: 0.5em;
+  display: inline-block;
+}
+
+.balance.loading {
+  opacity: 0.5;
 }

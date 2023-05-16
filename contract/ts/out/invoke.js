@@ -42,7 +42,20 @@ export async function invoke({ method, args = [], sign = true }) {
         });
         // re-assemble with signed tx
         tx = SorobanClient.TransactionBuilder.fromXDR(signed, NETWORK_PASSPHRASE);
-        return await Server.sendTransaction(tx);
+        const sendTransactionResponse = await Server.sendTransaction(tx);
+        let getTransactionResponse = await Server.getTransaction(sendTransactionResponse.hash);
+        const secondsToWait = 10;
+        const waitUntil = new Date((Date.now() + secondsToWait * 1000)).valueOf();
+        while ((Date.now() < waitUntil) && getTransactionResponse.status === "NOT_FOUND") {
+            // Wait a second
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            // See if the transaction is complete
+            getTransactionResponse = await Server.getTransaction(sendTransactionResponse.hash);
+        }
+        if (getTransactionResponse.status === "NOT_FOUND") {
+            console.log(`Waited ${secondsToWait} seconds for transaction to complete, but it did not. Returning anyway. Check the transaction status manually. Info: ${JSON.stringify(sendTransactionResponse, null, 2)}`);
+        }
+        return getTransactionResponse;
     }
     const { results } = await Server.simulateTransaction(tx);
     if (!results || results[0] === undefined) {

@@ -64,9 +64,14 @@ export const initDOMhandlers = () => {
   });
 
   (document.querySelector('[data-behavior=mint]') as HTMLFormElement).onclick = async () => {
+    getAll('tokenBalance').forEach(n => { n.classList.add('loading') })
+    getAll('mint').forEach(n => { (n as HTMLButtonElement).disabled = true })
+
     await tokenPlz({ id: window.sorobanUserAddress! })
-    // not sure why the `await` doesn't wait long enough!
-    setTimeout(() => render(), 1000)
+    render()
+
+    getAll('tokenBalance').forEach(n => { n.classList.remove('loading') })
+    getAll('mint').forEach(n => { (n as HTMLButtonElement).disabled = false })
   }
 
   /**
