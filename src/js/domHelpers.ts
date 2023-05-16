@@ -13,7 +13,7 @@ const getAll = (selector: string) => Array.from(document.querySelectorAll(`[data
  * You can `fill('thing').with('whatever')` to set the innerHTML
  */
 export const fill = (selector: string) => ({
-  with: (content: string | number | bigint) =>
+  with: (content: string | number | bigint | BigInt) =>
     getAll(selector).forEach(n => {
       n.innerHTML = `${content}`
       if (n.className.match('clip')) {

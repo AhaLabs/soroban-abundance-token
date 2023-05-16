@@ -1,5 +1,6 @@
 import { fill, hide, show } from './domHelpers'
-import { symbol, balance } from 'abundance-token'
+import { symbol, balance, decimals } from 'abundance-token'
+import { formatBalance } from './utils'
 
 /**
  * update the html based on user & data state
@@ -19,8 +20,11 @@ export default async function render() {
 
   if (readyToGo) {
     fill('tokenSymbol').with(await symbol())
-    //@ts-ignore
-    fill('tokenBalance').with(await balance({ id: window.sorobanUserAddress! }))
+
+    fill('tokenBalance').with(formatBalance(
+      await balance({ id: window.sorobanUserAddress! }),
+      await decimals()
+    ))
 
     hide('gettingStarted')
     show('allReady')

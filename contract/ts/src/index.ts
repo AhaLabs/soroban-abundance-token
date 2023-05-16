@@ -41,14 +41,7 @@ export async function balance({ id }: { id: string }): Promise<BigInt | number> 
     sign: false,
   })
   const scVal = SorobanClient.xdr.ScVal.fromXDR(Buffer.from(xdr, 'base64'))
-  const undivided = scvalToBigInt(scVal)
-  const decimals = await this.decimals()
-  // @ts-ignore 
-  const divided = undivided < BigInt(Number.MAX_SAFE_INTEGER)
-  ? Number(undivided) / (10 ** decimals)
-  // @ts-expect-error TS is very confused by BigInt division
-  : (undivided / (10n ** BigInt(decimals))) as unknown as BigInt
-  return divided
+  return scvalToBigInt(scVal)
 }
 
 export async function decimals(): Promise<number> {
