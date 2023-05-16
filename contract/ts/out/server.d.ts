@@ -1,2 +1,2 @@
 import * as SorobanClient from 'soroban-client';
-export declare const server: SorobanClient.Server;
+export declare const Server: SorobanClient.Server;

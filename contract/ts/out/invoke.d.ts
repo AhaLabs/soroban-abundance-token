@@ -1,8 +1,8 @@
 import * as SorobanClient from 'soroban-client';
 import type { Account } from 'soroban-client';
-import { server } from './server';
+import { Server } from './server';
 type Simulation = NonNullable<SorobanClient.SorobanRpc.SimulateTransactionResponse['results']>[0];
-type TxResponse = Awaited<ReturnType<typeof server.sendTransaction>>;
+type TxResponse = Awaited<ReturnType<typeof Server.sendTransaction>>;
 type InvokeArgs = {
     method: string;
     args?: any[];

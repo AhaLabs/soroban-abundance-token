@@ -1,6 +1,6 @@
 import { getNetworkDetails, getPublicKey, isConnected } from "@stellar/freighter-api";
 import render from './render'
-import { server } from 'abundance-token'
+import { Server } from 'abundance-token'
 
 type RpcError = { code: number, message: string }
 
@@ -16,12 +16,12 @@ function isRpcError(e: unknown): e is RpcError {
  */
 async function ensureAccountFunded(publicKey: string): Promise<void> {
   try {
-    await server.getAccount(publicKey)
+    await Server.getAccount(publicKey)
   } catch (e: unknown) {
     if (isRpcError(e) && e.code === -32600) {
-      const { friendbotUrl } = await server.getNetwork()
+      const { friendbotUrl } = await Server.getNetwork()
       await fetch(`${friendbotUrl}?addr=${publicKey}`)
-      await server.getAccount(publicKey)
+      await Server.getAccount(publicKey)
     } else {
       // re-throw
       throw e

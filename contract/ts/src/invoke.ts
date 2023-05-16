@@ -7,14 +7,14 @@ import * as SorobanClient from 'soroban-client'
 import { Buffer } from "buffer";
 import type { Account, Memo, MemoType, Operation, Transaction } from 'soroban-client';
 import { NETWORK_NAME, NETWORK_PASSPHRASE, CONTRACT_ID } from './constants'
-import { server } from './server'
+import { Server } from './server'
 window.Buffer = window.Buffer || Buffer;
 
 type Tx = Transaction<Memo<MemoType>, Operation[]>
 
 type Simulation = NonNullable<SorobanClient.SorobanRpc.SimulateTransactionResponse['results']>[0]
 
-type TxResponse = Awaited<ReturnType<typeof server.sendTransaction>>
+type TxResponse = Awaited<ReturnType<typeof Server.sendTransaction>>
 
 type InvokeArgs = {
   method: string
@@ -36,7 +36,7 @@ export async function getAccount(): Promise<Account> {
   if (!publicKey) {
     throw new Error('Freighter not initialized')
   }
-  return await server.getAccount(publicKey)
+  return await Server.getAccount(publicKey)
 }
 
 /**
@@ -67,7 +67,7 @@ export async function invoke({ method, args = [], sign = true }: InvokeArgs): Pr
     // Simulate the tx to discover the storage footprint, and update the
     // tx to include it. If you already know the storage footprint you
     // can use `addFootprint` to add it yourself, skipping this step.
-    tx = await server.prepareTransaction(tx, NETWORK_PASSPHRASE) as Tx
+    tx = await Server.prepareTransaction(tx, NETWORK_PASSPHRASE) as Tx
 
     // sign with Freighter
     const signed = await signTransaction(tx.toXDR(), {
@@ -81,10 +81,10 @@ export async function invoke({ method, args = [], sign = true }: InvokeArgs): Pr
       NETWORK_PASSPHRASE
     ) as Tx
 
-    return await server.sendTransaction(tx);
+    return await Server.sendTransaction(tx);
   }
 
-  const { results } = await server.simulateTransaction(tx)
+  const { results } = await Server.simulateTransaction(tx)
   if (!results || results[0] === undefined) {
     throw new Error("Invalid response from simulateTransaction")
   }
