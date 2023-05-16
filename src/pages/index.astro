@@ -33,72 +33,74 @@ import '../css/global.css'
     </div>
   </nav>
 
-  <main data-behavior="gettingStarted" style="margin: 0 auto; max-width: 50em; padding-bottom: 2rem">
+  <main style="margin: 0 auto; max-width: 50em; padding-bottom: 2rem">
     <div style="text-align: center; margin: 2rem auto 5rem; max-width: 25em">
-      <h1 class="title">Abundance Token</h1>
+      <h1 class="title">Abundance Token (<span data-behavior="tokenSymbol">ABND</span>)</h1>
       <p>
         An non-scarce <a href="https://soroban.stellar.org/" rel="nofollow">Soroban</a> <a href="https://soroban.stellar.org/docs/reference/interfaces/token-interface" rel="nofollow">Fungible Token</a>. Go ahead and take as much as you want!
       </p>
     </div>
-    <h1>Let's get you set up</h1>
-    <p>
-      You'll need a few things to get started. Don't worry, it's easy!
-    </p>
-    <div class="todo-cards">
-      <div id="getFreighter">
-        <h2>1. Get Freighter</h2>
-        <p>
-          Freighter is a browser extension that lets you interact with the Soroban network.
-        </p>
-        <p>
-          <a href="https://www.freighter.app/">Get Freighter</a>
-        </p>
-      </div>
-      <div id="enableFreighter">
-        <h2>2. Enable Freighter</h2>
-        <p>
-          Once you install Freighter, this page will prompt you to connect to it. Say yes!
-        </p>
-      </div>
-      <div id="selectFuturenet">
-        <h2>3. Select Futurenet</h2>
-        <p>
-          Open the Freighter extension and select the Futurenet network in the top right.
-        </p>
+    <div data-behavior="gettingStarted" style="display: none">
+      <h1>Let's get you set up</h1>
+      <p>
+        You'll need a few things to get started. Don't worry, it's easy!
+      </p>
+      <div class="todo-cards">
+        <div id="getFreighter">
+          <h2>1. Get Freighter</h2>
+          <p>
+            Freighter is a browser extension that lets you interact with the Soroban network.
+          </p>
+          <p>
+            <a href="https://www.freighter.app/">Get Freighter</a>
+          </p>
+        </div>
+        <div id="enableFreighter">
+          <h2>2. Enable Freighter</h2>
+          <p>
+            Once you install Freighter, this page will prompt you to connect to it. Say yes!
+          </p>
+        </div>
+        <div id="selectFuturenet">
+          <h2>3. Select Futurenet</h2>
+          <p>
+            Open the Freighter extension and select the Futurenet network in the top right.
+          </p>
+        </div>
       </div>
     </div>
-  </main>
 
-  <main data-behavior="allReady" style="display: none; text-align: center; margin: 2rem auto 0; max-width: 25em; padding-bottom: 2rem">
-    <h1 class="title">
-      Your <span data-behavior="tokenSymbol">🤔</span> Balance:
-      <span class="balance" data-behavior="tokenBalance">🤔</span>
-    </h1>
-    <button data-behavior="mint">
-      Mint One
-    </button>
-    <!-- the takes-an-argument version
-    <form style="margin: 0 auto; max-width: 15em">
-      <fieldset id="fieldset">
-        <label
-          for="amount"
-          style="display: block; margin: 2em 0 0.1em"
-        >
-          Want more?
-        </label>
-        <div style="display: flex">
-          <input
-            autocomplete="off"
-            id="amount"
-            type="number"
-          />
-          <button id="submit" disabled style="border-radius: 0 5px 5px 0">
-            OK
-          </button>
-        </div>
-      </fieldset>
-    </form>
-    -->
+    <div data-behavior="allReady" style="display: none; text-align: center; margin: 2rem auto 0; max-width: 25em; padding-bottom: 2rem">
+      <h2>
+        Your Balance:
+        <span class="balance" data-behavior="tokenBalance">🤔</span>
+      </h2>
+      <button data-behavior="mint">
+        Mint One
+      </button>
+      <!-- the takes-an-argument version
+      <form style="margin: 0 auto; max-width: 15em">
+        <fieldset id="fieldset">
+          <label
+            for="amount"
+            style="display: block; margin: 2em 0 0.1em"
+          >
+            Want more?
+          </label>
+          <div style="display: flex">
+            <input
+              autocomplete="off"
+              id="amount"
+              type="number"
+            />
+            <button id="submit" disabled style="border-radius: 0 5px 5px 0">
+              OK
+            </button>
+          </div>
+        </fieldset>
+      </form>
+      -->
+    </div>
   </main>
 
   <script src="../js/index.js"></script>
