@@ -1,10 +1,11 @@
 import { fill, hide, show } from './domHelpers'
-import { getBalance, getSymbol } from './soroban/contract'
+import { symbol, balance, decimals } from 'abundance-token'
+import { formatBalance } from './utils'
 
 /**
  * update the html based on user & data state
  */
-export default async function render () {
+export default async function render() {
   if (window.hasFreighter) {
     document.querySelector('#getFreighter')!.className = 'done'
   }
@@ -18,8 +19,12 @@ export default async function render () {
   const readyToGo = window.hasFreighter && window.sorobanUserAddress
 
   if (readyToGo) {
-    fill('tokenSymbol').with(await getSymbol())
-    fill('tokenBalance').with(await getBalance({ id: window.sorobanUserAddress! }))
+    fill('tokenSymbol').with(await symbol())
+
+    fill('tokenBalance').with(formatBalance(
+      await balance({ id: window.sorobanUserAddress! }),
+      await decimals()
+    ))
 
     hide('gettingStarted')
     show('allReady')
