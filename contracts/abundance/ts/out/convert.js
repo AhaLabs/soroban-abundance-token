@@ -5,12 +5,6 @@ export function scvalToBigInt(scval) {
         case undefined: {
             return BigInt(0);
         }
-        case xdr.ScValType.scvU32(): {
-            return BigInt(scval.u32());
-        }
-        case xdr.ScValType.scvI32(): {
-            return BigInt(scval.i32());
-        }
         case xdr.ScValType.scvU64(): {
             const { high, low } = scval.u64();
             return bigIntFromBytes(false, high, low);
@@ -39,6 +33,34 @@ export function scvalToBigInt(scval) {
         }
         default: {
             throw new Error(`Invalid type for scvalToBigInt: ${scval?.switch().name}`);
+        }
+    }
+    ;
+}
+export function scValToJs(scval) {
+    switch (scval?.switch()) {
+        case undefined: {
+            return 0;
+        }
+        case xdr.ScValType.scvU32(): {
+            return scval.u32();
+        }
+        case xdr.ScValType.scvI32(): {
+            return scval.i32();
+        }
+        case xdr.ScValType.scvU64():
+        case xdr.ScValType.scvI64():
+        case xdr.ScValType.scvU128():
+        case xdr.ScValType.scvI128():
+        case xdr.ScValType.scvU256():
+        case xdr.ScValType.scvI256():
+            return scvalToBigInt(scval);
+        case xdr.ScValType.scvAddress():
+            return scval.address().value.toString();
+        case xdr.ScValType.scvBytes():
+            return scval.bytes();
+        default: {
+            throw new Error(`type not implemented yet: ${scval?.switch().name}`);
         }
     }
     ;
