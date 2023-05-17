@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
-    "abundance",
+    "contracts/*",
 ]
 
 [profile.release-with-logs]
