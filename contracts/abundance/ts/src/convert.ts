@@ -6,12 +6,6 @@ export function scvalToBigInt(scval: SorobanClient.xdr.ScVal | undefined): BigIn
         case undefined: {
             return BigInt(0);
         }
-        case xdr.ScValType.scvU32(): {
-            return BigInt(scval.u32());
-        }
-        case xdr.ScValType.scvI32(): {
-            return BigInt(scval.i32());
-        }
         case xdr.ScValType.scvU64(): {
             const { high, low } = scval.u64();
             return bigIntFromBytes(false, high, low);
@@ -42,6 +36,35 @@ export function scvalToBigInt(scval: SorobanClient.xdr.ScVal | undefined): BigIn
             throw new Error(`Invalid type for scvalToBigInt: ${scval?.switch().name}`);
         }
     };
+}
+
+export function scValToJs<T>(scval: SorobanClient.xdr.ScVal): T {
+    switch (scval?.switch()) {
+        case undefined: {
+            return 0 as T;
+        }
+        case xdr.ScValType.scvU32(): {
+            return scval.u32() as T;
+        }
+        case xdr.ScValType.scvI32(): {
+            return scval.i32() as T;
+        }
+        case xdr.ScValType.scvU64():
+        case xdr.ScValType.scvI64():
+        case xdr.ScValType.scvU128():
+        case xdr.ScValType.scvI128():
+        case xdr.ScValType.scvU256():
+        case xdr.ScValType.scvI256():
+            return scvalToBigInt(scval) as T;
+        case xdr.ScValType.scvAddress():
+            return scval.address().value.toString() as T;
+        case xdr.ScValType.scvBytes():
+            return scval.bytes() as T;
+        default: {
+            throw new Error(`type not implemented yet: ${scval?.switch().name}`);
+        }
+    };
+
 }
 
 function bigIntFromBytes(signed: boolean, ...bytes: (string | number | bigint)[]): BigInt {
