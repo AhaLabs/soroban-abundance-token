@@ -14,7 +14,7 @@
     "astro": "^2.3.1",
     "buffer": "^6.0.3",
     "soroban-client": "^0.5.1",
-    "abundance-token": "./contract/ts"
+    "abundance-token": "./contracts/abundance/ts"
   },
   "private": true
 }
