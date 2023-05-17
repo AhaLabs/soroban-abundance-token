@@ -1,6 +1,6 @@
 interface ImportMetaEnv {
-  readonly PUBLIC_SOROBAN_CONTRACT_ID: string;
-  readonly SOROBAN_CONTRACT_ID: string;
+  readonly PUBLIC_SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID: string;
+  readonly SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID: string;
 
   readonly PUBLIC_SOROBAN_NETWORK_NAME: string;
   readonly SOROBAN_NETWORK_NAME: string;

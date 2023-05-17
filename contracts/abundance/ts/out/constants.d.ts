@@ -1,6 +1,8 @@
 /**
- * TODO: should this maybe be called ABUNDANCE_TOKEN_ID, to match the `--name`
- * given by to the `soroban contract bindings ts` command?
+ * The Soroban contract ID for the `abundance-token` contract.
+ *
+ * You can override this by setting a `SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID` or
+ * `PUBLIC_SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID` environment variable.
  */
 export declare const CONTRACT_ID: string;
 /**

@@ -1,9 +1,11 @@
 /**
- * TODO: should this maybe be called ABUNDANCE_TOKEN_ID, to match the `--name`
- * given by to the `soroban contract bindings ts` command?
+ * The Soroban contract ID for the `abundance-token` contract.
+ * 
+ * You can override this by setting a `SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID` or
+ * `PUBLIC_SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID` environment variable.
  */
-export const CONTRACT_ID = import.meta.env.PUBLIC_SOROBAN_CONTRACT_ID
-  ?? import.meta.env.SOROBAN_CONTRACT_ID
+export const CONTRACT_ID = import.meta.env.PUBLIC_SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID
+  ?? import.meta.env.SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID
   ?? '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de'
 
 /**

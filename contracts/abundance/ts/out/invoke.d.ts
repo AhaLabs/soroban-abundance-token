@@ -1,9 +1,10 @@
 import * as SorobanClient from 'soroban-client';
-import type { Account } from 'soroban-client';
+import type { Account, Memo, MemoType, Operation, Transaction } from 'soroban-client';
 import { Server } from './server';
-type Simulation = NonNullable<SorobanClient.SorobanRpc.SimulateTransactionResponse['results']>[0];
-type TxResponse = Awaited<ReturnType<typeof Server.getTransaction>>;
-type InvokeArgs = {
+export type Tx = Transaction<Memo<MemoType>, Operation[]>;
+export type Simulation = NonNullable<SorobanClient.SorobanRpc.SimulateTransactionResponse['results']>[0];
+export type TxResponse = Awaited<ReturnType<typeof Server.getTransaction>>;
+export type InvokeArgs = {
     method: string;
     args?: any[];
     sign?: boolean;
@@ -32,4 +33,3 @@ export declare function invoke(args: InvokeArgs & {
 export declare function invoke(args: InvokeArgs & {
     sign?: undefined;
 }): Promise<TxResponse>;
-export {};

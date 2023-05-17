@@ -2,6 +2,7 @@ import * as SorobanClient from 'soroban-client';
 import { Buffer } from "buffer";
 import { scvalToBigInt } from './convert';
 import { invoke } from './invoke';
+export * from './constants';
 export * from './server';
 export * from './invoke';
 window.Buffer = window.Buffer || Buffer;

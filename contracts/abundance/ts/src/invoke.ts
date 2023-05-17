@@ -10,13 +10,13 @@ import { NETWORK_NAME, NETWORK_PASSPHRASE, CONTRACT_ID } from './constants'
 import { Server } from './server'
 window.Buffer = window.Buffer || Buffer;
 
-type Tx = Transaction<Memo<MemoType>, Operation[]>
+export type Tx = Transaction<Memo<MemoType>, Operation[]>
 
-type Simulation = NonNullable<SorobanClient.SorobanRpc.SimulateTransactionResponse['results']>[0]
+export type Simulation = NonNullable<SorobanClient.SorobanRpc.SimulateTransactionResponse['results']>[0]
 
-type TxResponse = Awaited<ReturnType<typeof Server.getTransaction>>
+export type TxResponse = Awaited<ReturnType<typeof Server.getTransaction>>
 
-type InvokeArgs = {
+export type InvokeArgs = {
   method: string
   args?: any[]
   sign?: boolean
