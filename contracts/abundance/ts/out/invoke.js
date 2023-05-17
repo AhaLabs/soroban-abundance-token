@@ -20,7 +20,7 @@ export async function getAccount() {
     }
     return await Server.getAccount(publicKey);
 }
-export async function invoke({ method, args = [], sign = true }) {
+export async function invoke({ method, args = [], sign = false }) {
     const account = await getAccount();
     const contract = new SorobanClient.Contract(CONTRACT_ID);
     let tx = new SorobanClient.TransactionBuilder(account, {

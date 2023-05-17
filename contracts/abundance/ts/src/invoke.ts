@@ -50,7 +50,7 @@ export async function getAccount(): Promise<Account> {
 export async function invoke(args: InvokeArgs & { sign: false }): Promise<Simulation>;
 export async function invoke(args: InvokeArgs & { sign: true }): Promise<TxResponse>;
 export async function invoke(args: InvokeArgs & { sign?: undefined }): Promise<TxResponse>;
-export async function invoke({ method, args = [], sign = true }: InvokeArgs): Promise<TxResponse | Simulation> {
+export async function invoke({ method, args = [], sign = false }: InvokeArgs): Promise<TxResponse | Simulation> {
   const account = await getAccount()
 
   const contract = new SorobanClient.Contract(CONTRACT_ID)

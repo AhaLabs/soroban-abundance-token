@@ -1,4 +1,4 @@
-import { tokenPlz } from 'abundance-token'
+import { token_plz as tokenPlz } from 'abundance-token'
 import render from './render'
 
 /**
@@ -67,7 +67,7 @@ export const initDOMhandlers = () => {
     getAll('tokenBalance').forEach(n => { n.classList.add('loading') })
     getAll('mint').forEach(n => { (n as HTMLButtonElement).disabled = true })
 
-    await tokenPlz({ id: window.sorobanUserAddress! })
+    await tokenPlz({ to: window.sorobanUserAddress! })
     render()
 
     getAll('tokenBalance').forEach(n => { n.classList.remove('loading') })
