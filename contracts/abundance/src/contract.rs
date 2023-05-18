@@ -60,6 +60,7 @@ pub struct Token;
 
 #[contractimpl]
 impl TokenTrait for Token {
+    /// @signme
     fn initialize(e: Env, admin: Address, decimal: u32, name: Bytes, symbol: Bytes) {
         if has_administrator(&e) {
             panic!("already initialized")
@@ -75,6 +76,7 @@ impl TokenTrait for Token {
         read_allowance(&e, from, spender)
     }
 
+    /// @signme
     fn incr_allow(e: Env, from: Address, spender: Address, amount: i128) {
         from.require_auth();
 
@@ -89,6 +91,7 @@ impl TokenTrait for Token {
         event::incr_allow(&e, from, spender, amount);
     }
 
+    /// @signme
     fn decr_allow(e: Env, from: Address, spender: Address, amount: i128) {
         from.require_auth();
 
@@ -115,6 +118,7 @@ impl TokenTrait for Token {
         is_authorized(&e, id)
     }
 
+    /// @signme
     fn xfer(e: Env, from: Address, to: Address, amount: i128) {
         from.require_auth();
 
@@ -124,6 +128,7 @@ impl TokenTrait for Token {
         event::transfer(&e, from, to, amount);
     }
 
+    /// @signme
     fn xfer_from(e: Env, spender: Address, from: Address, to: Address, amount: i128) {
         spender.require_auth();
 
@@ -134,6 +139,7 @@ impl TokenTrait for Token {
         event::transfer(&e, from, to, amount)
     }
 
+    /// @signme
     fn burn(e: Env, from: Address, amount: i128) {
         from.require_auth();
 
@@ -142,6 +148,7 @@ impl TokenTrait for Token {
         event::burn(&e, from, amount);
     }
 
+    /// @signme
     fn burn_from(e: Env, spender: Address, from: Address, amount: i128) {
         spender.require_auth();
 
@@ -151,6 +158,7 @@ impl TokenTrait for Token {
         event::burn(&e, from, amount)
     }
 
+    /// @signme
     fn clawback(e: Env, admin: Address, from: Address, amount: i128) {
         check_nonnegative_amount(amount);
         check_admin(&e, &admin);
@@ -159,6 +167,7 @@ impl TokenTrait for Token {
         event::clawback(&e, admin, from, amount);
     }
 
+    /// @signme
     fn set_auth(e: Env, admin: Address, id: Address, authorize: bool) {
         check_admin(&e, &admin);
         admin.require_auth();
@@ -174,6 +183,7 @@ impl TokenTrait for Token {
     /// * `to` - The Address to mint tokens to
     /// * `amount` - The amount of smallest possible token fractions to mint (remember to multiply
     ///   by `decimals` to get the actual amount of tokens to mint)
+    /// @signme
     fn mint(e: Env, admin: Address, to: Address, amount: i128) {
         check_nonnegative_amount(amount);
         check_admin(&e, &admin);
@@ -186,6 +196,8 @@ impl TokenTrait for Token {
     ///
     /// # Arguments
     /// * `to` - The Address to mint a token to. Must also be the signer/caller.
+    /// 
+    /// @signme
     fn token_plz(e: Env, to: Address) {
         to.require_auth();
         let amount = 1 * 10i128.pow(read_decimal(&e));
@@ -193,6 +205,7 @@ impl TokenTrait for Token {
         event::mint(&e, to.clone(), to, amount);
     }
 
+    /// @signme
     fn set_admin(e: Env, admin: Address, new_admin: Address) {
         check_admin(&e, &admin);
         admin.require_auth();

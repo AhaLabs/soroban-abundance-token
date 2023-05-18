@@ -1,14 +1,4 @@
 /**
- * The Soroban contract ID for the `abundance-token` contract.
- * 
- * You can override this by setting a `SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID` or
- * `PUBLIC_SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID` environment variable.
- */
-export const CONTRACT_ID = import.meta.env.PUBLIC_SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID
-  ?? import.meta.env.SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID
-  ?? '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de'
-
-/**
  * Matches the name given by Freighter's `getNetworkDetails().network` for the network used to initialize this library.
  *
  * You can override this by setting a `SOROBAN_NETWORK_NAME` or
@@ -38,3 +28,13 @@ export const RPC_URL = import.meta.env.PUBLIC_SOROBAN_RPC_URL
   ?? import.meta.env.SOROBAN_RPC_URL
   ?? 'https://rpc-futurenet.stellar.org:443/soroban/rpc'
 
+
+/**
+ * The Soroban contract ID for the `abundance-token` contract.
+ * 
+ * You can override this by setting a `SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID` or
+ * `PUBLIC_SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID` environment variable.
+ */
+export const CONTRACT_ID = import.meta.env.PUBLIC_SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID
+    ?? import.meta.env.SOROBAN_ABUNDANCE_TOKEN_CONTRACT_ID
+    ?? '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de'
