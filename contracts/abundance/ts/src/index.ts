@@ -7,7 +7,9 @@ export * from './constants'
 export * from './server'
 export * from './invoke'
 
-window.Buffer = window.Buffer || Buffer;
+if (typeof window !== 'undefined') {
+  window.Buffer = window.Buffer || Buffer;
+}
 
 export type Simulation = NonNullable<SorobanClient.SorobanRpc.SimulateTransactionResponse['results']>[0]
 

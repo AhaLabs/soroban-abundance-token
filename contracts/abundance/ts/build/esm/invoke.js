@@ -3,7 +3,9 @@ import * as SorobanClient from 'soroban-client';
 import { Buffer } from "buffer";
 import { NETWORK_NAME, NETWORK_PASSPHRASE, CONTRACT_ID } from './constants';
 import { Server } from './server';
-window.Buffer = window.Buffer || Buffer;
+if (typeof window !== 'undefined') {
+    window.Buffer = window.Buffer || Buffer;
+}
 /**
  * Get account details from the Soroban network for the publicKey currently
  * selected in Freighter. If not connected to Freighter, throws errors. Will

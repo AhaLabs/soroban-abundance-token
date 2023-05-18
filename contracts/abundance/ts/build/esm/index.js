@@ -5,7 +5,9 @@ import { invoke } from './invoke';
 export * from './constants';
 export * from './server';
 export * from './invoke';
-window.Buffer = window.Buffer || Buffer;
+if (typeof window !== 'undefined') {
+    window.Buffer = window.Buffer || Buffer;
+}
 /**
  * Get the symbol for the Abundance token.
  * Caches the value in-memory so it only fetches once per page load, since it's unlikely to change.

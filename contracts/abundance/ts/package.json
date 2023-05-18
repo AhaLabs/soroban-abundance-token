@@ -1,17 +1,28 @@
 {
-    "name": "abundance-token",
-    "dependencies": {
-        "@stellar/freighter-api": "1.4.0",
-        "buffer": "6.0.3",
-        "soroban-client": "0.5.1"
+  "name": "abundance-token",
+  "dependencies": {
+    "@stellar/freighter-api": "1.4.0",
+    "buffer": "6.0.3",
+    "soroban-client": "0.5.1"
+  },
+  "scripts": {
+    "build": "node ./scripts/build.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./build/types/index.d.ts",
+      "require": "./build/cjs/index.js",
+      "import": "./build/esm/index.js",
+      "default": "./build/esm/index.js"
     },
-    "scripts": {
-      "build": "tsc"
-    },
-    "type": "module",
-    "main": "out/index.js",
-    "typings": "out/index.d.ts",
-    "devDependencies": {
-        "typescript": "5.0.4"
+    "./*": {
+      "types": "./build/types/index.d.ts",
+      "require": "./build/cjs/index.js",
+      "import": "./build/esm/index.js",
+      "default": "./build/esm/index.js"
     }
+  },
+  "devDependencies": {
+    "typescript": "5.0.4"
+  }
 }
