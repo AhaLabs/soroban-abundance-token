@@ -12,7 +12,7 @@
     "astro": "astro",
     "build:contracts": "cargo build --release",
     "test:contracts": "cargo test",
-    "generate:contract-libs": "./target/bin/soroban contract bindings ts --wasm ./target/wasm32-unknown-unknown/release/abundance_token.wasm --id 2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de --root-dir ./target/contracts/abundance --contract-name abundance-token && cd target/contracts/abundance && npm i && npm run build"
+    "generate": "./target/bin/soroban contract bindings ts --wasm ./target/wasm32-unknown-unknown/release/abundance_token.wasm --id 2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de --root-dir ./target/contracts/abundance --contract-name abundance-token && cd target/contracts/abundance && npm i && npm run build"
   },
   "dependencies": {
     "@stellar/freighter-api": "^1.4.0",
