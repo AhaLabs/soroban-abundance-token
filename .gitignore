@@ -22,3 +22,4 @@ pnpm-debug.log*
 
 # Cargo/Rust build directory
 target
+.soroban/

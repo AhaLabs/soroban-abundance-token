@@ -5,8 +5,8 @@ dependencies:
     specifier: ^1.4.0
     version: 1.4.0
   abundance-token:
-    specifier: ./target/js-clients/abundance/ts
-    version: link:target/js-clients/abundance/ts
+    specifier: ./target/js-clients/abundance
+    version: link:target/js-clients/abundance
   astro:
     specifier: ^2.3.1
     version: 2.3.1
