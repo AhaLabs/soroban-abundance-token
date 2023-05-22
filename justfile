@@ -14,7 +14,8 @@ soroban +args:
 s name +args:
     @just soroban {{ name }} {{ args }}
 
-build profile='release': && build_generated
+
+build profile='release':
     cargo build --profile {{profile}}
 
 build_generated:
