@@ -28,6 +28,8 @@ generate: build && build_generated
         --root-dir ./target/js-clients/abundance \
         --contract-name abundance-token
 
+dev: generate
+    pnpm dev
 
 [private]
 setup_default:
@@ -35,7 +37,6 @@ setup_default:
 
 @setup:
     echo {{ if path_exists(soroban) == "true" { "" } else { `cargo install_soroban` } }}
-    echo {{ if path_exists(env_var('CONFIG_DIR') / 'identity/default.toml') == "true" { "" } else { `just setup_default` } }}
 
 
 # Delete non-wasm artifacts
