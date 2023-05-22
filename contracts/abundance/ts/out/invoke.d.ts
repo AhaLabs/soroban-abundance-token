@@ -1,13 +1,13 @@
 import * as SorobanClient from 'soroban-client';
 import type { Account, Memo, MemoType, Operation, Transaction } from 'soroban-client';
-import { Server } from './server';
 export type Tx = Transaction<Memo<MemoType>, Operation[]>;
 export type Simulation = NonNullable<SorobanClient.SorobanRpc.SimulateTransactionResponse['results']>[0];
-export type TxResponse = Awaited<ReturnType<typeof Server.getTransaction>>;
+export type TxResponse = SorobanClient.SorobanRpc.GetTransactionResponse;
 export type InvokeArgs = {
     method: string;
     args?: any[];
     sign?: boolean;
+    fee?: number;
 };
 /**
  * Get account details from the Soroban network for the publicKey currently

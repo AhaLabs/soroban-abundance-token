@@ -37,7 +37,8 @@ export function scvalToBigInt(scval) {
     }
     ;
 }
-export function scValToJs(scval) {
+export function scValToJs(base64_xdr) {
+    let scval = SorobanClient.xdr.ScVal.fromXDR(Buffer.from(base64_xdr, 'base64'));
     switch (scval?.switch()) {
         case undefined: {
             return 0;

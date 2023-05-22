@@ -20,46 +20,55 @@ export async function getAccount() {
     }
     return await Server.getAccount(publicKey);
 }
-export async function invoke({ method, args = [], sign = false }) {
+export async function invoke({ method, args = [], sign = false, fee = 100 }) {
     const account = await getAccount();
     const contract = new SorobanClient.Contract(CONTRACT_ID);
     let tx = new SorobanClient.TransactionBuilder(account, {
-        fee: '100',
+        fee: fee.toString(10),
         networkPassphrase: NETWORK_PASSPHRASE,
     })
         .addOperation(contract.call(method, ...args))
         .setTimeout(SorobanClient.TimeoutInfinite)
         .build();
     if (sign) {
-        // Simulate the tx to discover the storage footprint, and update the
-        // tx to include it. If you already know the storage footprint you
-        // can use `addFootprint` to add it yourself, skipping this step.
-        tx = await Server.prepareTransaction(tx, NETWORK_PASSPHRASE);
-        // sign with Freighter
-        const signed = await signTransaction(tx.toXDR(), {
-            network: NETWORK_NAME,
-            networkPassphrase: NETWORK_PASSPHRASE,
-        });
-        // re-assemble with signed tx
-        tx = SorobanClient.TransactionBuilder.fromXDR(signed, NETWORK_PASSPHRASE);
-        const sendTransactionResponse = await Server.sendTransaction(tx);
-        let getTransactionResponse = await Server.getTransaction(sendTransactionResponse.hash);
-        const secondsToWait = 10;
-        const waitUntil = new Date((Date.now() + secondsToWait * 1000)).valueOf();
-        while ((Date.now() < waitUntil) && getTransactionResponse.status === "NOT_FOUND") {
-            // Wait a second
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            // See if the transaction is complete
-            getTransactionResponse = await Server.getTransaction(sendTransactionResponse.hash);
-        }
-        if (getTransactionResponse.status === "NOT_FOUND") {
-            console.log(`Waited ${secondsToWait} seconds for transaction to complete, but it did not. Returning anyway. Check the transaction status manually. Info: ${JSON.stringify(sendTransactionResponse, null, 2)}`);
-        }
-        return getTransactionResponse;
+        let res = await invokeRpc(tx);
+        console.log(res);
+        return res;
     }
     const { results } = await Server.simulateTransaction(tx);
     if (!results || results[0] === undefined) {
         throw new Error("Invalid response from simulateTransaction");
     }
     return results[0];
+}
+async function invokeRpc(tx) {
+    // Simulate the tx to discover the storage footprint, and update the
+    // tx to include it. If you already know the storage footprint you
+    // can use `addFootprint` to add it yourself, skipping this step.
+    tx = await Server.prepareTransaction(tx, NETWORK_PASSPHRASE);
+    // sign with Freighter
+    const signed = await signTransaction(tx.toXDR(), {
+        network: NETWORK_NAME,
+        networkPassphrase: NETWORK_PASSPHRASE,
+    });
+    // re-assemble with signed tx
+    tx = SorobanClient.TransactionBuilder.fromXDR(signed, NETWORK_PASSPHRASE);
+    const sendTransactionResponse = await Server.sendTransaction(tx);
+    let getTransactionResponse = await Server.getTransaction(sendTransactionResponse.hash);
+    const secondsToWait = 10;
+    const waitUntil = new Date((Date.now() + secondsToWait * 1000)).valueOf();
+    let waitTime = 1000;
+    let exponentialFactor = 1.5;
+    while ((Date.now() < waitUntil) && getTransactionResponse.status === "NOT_FOUND") {
+        // Wait a second
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        /// Exponential backoff
+        waitTime = waitTime * exponentialFactor;
+        // See if the transaction is complete
+        getTransactionResponse = await Server.getTransaction(sendTransactionResponse.hash);
+    }
+    if (getTransactionResponse.status === "NOT_FOUND") {
+        console.log(`Waited ${secondsToWait} seconds for transaction to complete, but it did not. Returning anyway. Check the transaction status manually. Info: ${JSON.stringify(sendTransactionResponse, null, 2)}`);
+    }
+    return getTransactionResponse;
 }

@@ -12,6 +12,27 @@ export type i128 = bigint;
 export type u256 = bigint;
 export type i256 = bigint;
 export type Address = string;
+export type Option<T> = T | undefined;
+export interface Error_ {
+    message: string;
+}
+export type Result<T, E = Error_> = Ok<T, E> | Err<T, E>;
+export declare class Ok<T, E> {
+    readonly value: T;
+    readonly kind: 'ok';
+    constructor(value: T);
+    unwrap(): T;
+    map<U>(f: (value: T) => U): Result<U, E>;
+    mapErr<U>(_: (error: E) => U): Result<T, U>;
+}
+export declare class Err<T, E> {
+    readonly message: E;
+    readonly kind: 'err';
+    constructor(message: E);
+    unwrap(): never;
+    map<U>(_: (value: T) => U): Result<U, E>;
+    mapErr<U>(f: (error: E) => U): Result<T, U>;
+}
 /**
  * @signme
  */
