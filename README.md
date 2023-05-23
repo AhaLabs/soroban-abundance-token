@@ -13,7 +13,7 @@ Contributing
 
 ## Prerequisites 
 
-0. Need to install just `cargo install just`
+0. Install [just](https://github.com/casey/just#readme): `cargo install just`
 0. Install [Node.js](https://nodejs.org/en/download/package-manager/) ≥ 16 and [pnpm](https://pnpm.io/)
 
 Get the frontend working:
