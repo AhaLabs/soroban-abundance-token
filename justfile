@@ -29,7 +29,7 @@ generate: build && build_generated
         --contract-name abundance-token
 
 dev: generate
-    pnpm dev
+    npm run dev
 
 [private]
 setup_default:
