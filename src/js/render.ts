@@ -9,7 +9,7 @@ let tokenSymbol: string
  */
 export default async function render() {
   if (!tokenSymbol) {
-    tokenSymbol = await symbol()
+    tokenSymbol = (await symbol()).toString()
     fill('tokenSymbol').with(tokenSymbol)
   }
 

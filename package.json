@@ -3,21 +3,23 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "postinstall": "just setup",
+    "soroban": "./target/bin/soroban",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "build:contracts": "cargo build --target wasm32-unknown-unknown --release && ls -l target/wasm32-unknown-unknown/release/*.wasm",
+    "build:contracts": "just build",
     "test:contracts": "cargo test",
-    "generate:contract-libs": "soroban contract bindings ts --network futurenet --id 2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de --out target/abundance --name abundance-token"
+    "generate": "just generate"
   },
   "dependencies": {
     "@stellar/freighter-api": "^1.4.0",
     "astro": "^2.3.1",
     "buffer": "^6.0.3",
     "soroban-client": "^0.5.1",
-    "abundance-token": "./contracts/abundance/ts"
+    "abundance-token": "./target/js-clients/abundance"
   },
   "private": true
 }

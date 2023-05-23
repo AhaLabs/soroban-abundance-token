@@ -11,12 +11,15 @@ This project uses raw JS rather than React, which will help drive development of
 Contributing
 ============
 
-Get the frontend working:
+## Prerequisites 
 
+0. Install [just](https://github.com/casey/just#readme): `cargo install just`
 0. Install [Node.js](https://nodejs.org/en/download/package-manager/) ≥ 16 and [pnpm](https://pnpm.io/)
-1. Clone this repo and `cd` into its directory
-2. Install dependencies with `pnpm install`
-3. Run frontend app in development mode with `pnpm dev` (see other commands you can run in the `scripts` section of `package.json`)
+
+Get the frontend working:
+0. Clone this repo and `cd` into its directory
+0. Install dependencies with `pnpm install`
+0. Run frontend app in development mode with `just dev` (see other commands you can run with `just --list` and in the `scripts` section of `package.json`)
 
 The Abundance Token source code lives in [./contract](./contract). If you want to make CLI calls to the deployed contract:
 
