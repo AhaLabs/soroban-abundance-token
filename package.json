@@ -17,8 +17,6 @@
   "dependencies": {
     "@stellar/freighter-api": "^1.4.0",
     "astro": "^2.3.1",
-    "buffer": "^6.0.3",
-    "soroban-client": "^0.5.1",
     "abundance-token": "./target/js-clients/abundance"
   },
   "private": true
