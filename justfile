@@ -16,7 +16,7 @@ s name +args:
 
 
 build profile='release':
-    cargo build --profile {{profile}}
+    cargo build --profile {{profile}} --target wasm32-unknown-unknown
 
 build_generated:
     cd target/js-clients/abundance && npm i && npm run build
