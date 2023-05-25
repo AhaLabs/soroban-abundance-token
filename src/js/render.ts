@@ -13,7 +13,11 @@ export default async function render() {
     fill('tokenSymbol').with(tokenSymbol)
   }
 
-  if (window.hasFreighter && window.sorobanUserAddress) {
+  const allReady = window.hasFreighter &&
+    window.sorobanUserAddress &&
+    window.freighterNetwork?.network === 'FUTURENET'
+
+  if (allReady) {
     hide('gettingStarted')
 
     fill('tokenBalance').with(formatBalance(
