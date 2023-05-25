@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@stellar/freighter-api": "^1.4.0",
-    "astro": "^2.3.1",
-    "abundance-token": "./target/js-clients/abundance"
+    "abundance-token": "file:target/js-clients/abundance",
+    "astro": "^2.3.1"
   },
   "private": true
 }
