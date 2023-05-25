@@ -8,16 +8,17 @@ let tokenSymbol: string
  * update the html based on user & data state
  */
 export default async function render() {
-  if (!tokenSymbol) {
-    tokenSymbol = (await symbol()).toString()
-    fill('tokenSymbol').with(tokenSymbol)
-  }
-
   const allReady = window.hasFreighter &&
     window.sorobanUserAddress &&
     window.freighterNetwork?.network === 'FUTURENET'
 
   if (allReady) {
+    // ensure that the symbol matches the expected (mostly to demo the symbol() function)
+    if (!tokenSymbol) {
+      tokenSymbol = (await symbol()).toString()
+      fill('tokenSymbol').with(tokenSymbol)
+    }
+
     hide('gettingStarted')
 
     fill('tokenBalance').with(formatBalance(
