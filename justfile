@@ -3,7 +3,7 @@ set dotenv-load
 
 export PATH := './target/bin:' + env_var('PATH')
 TARGET_DIR := './target/wasm32-unknown-unknown/release'
-CONTRACT_ID := '2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de'
+CONTRACT_ID := '3d0ad3712bcb251a0dc899882313ad7167c9400a5f51444d86ab6c3f93faa513'
 SMARTDEPLOY := TARGET_DIR / 'abundance_token.wasm'
 soroban := 'target/bin/soroban'
 
@@ -24,7 +24,7 @@ build_generated:
 generate: build && build_generated
     ./target/bin/soroban contract bindings ts \
         --wasm ./target/wasm32-unknown-unknown/release/abundance_token.wasm \
-        --id 2c6c3b8ba9923d029d8ef7eb80080384b1da32bcf0698290119fdfbf3f2a01de \
+        --id 3d0ad3712bcb251a0dc899882313ad7167c9400a5f51444d86ab6c3f93faa513 \
         --root-dir ./target/js-clients/abundance \
         --contract-name abundance-token
 
