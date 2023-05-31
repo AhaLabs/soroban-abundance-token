@@ -14,6 +14,13 @@ soroban +args:
 s name +args:
     @just soroban {{ name }} {{ args }}
 
+init:
+    soroban contract invoke --network futurenet --source default --id {{ CONTRACT_ID }} -- \
+    initialize \
+    --symbol '"41424E44"' \
+    --decimal 7 \
+    --name '"4162756E64616E636520546F6B656E"' \
+    --admin `soroban config identity address default`
 
 build profile='release':
     cargo build --profile {{profile}} --target wasm32-unknown-unknown
