@@ -10,7 +10,7 @@ let tokenSymbol: string
 export default async function render() {
   const allReady = window.hasFreighter &&
     window.sorobanUserAddress &&
-    window.freighterNetwork?.network === 'FUTURENET'
+    window.freighterNetwork?.network.toUpperCase() === 'FUTURENET'
 
   if (allReady) {
     // ensure that the symbol matches the expected (mostly to demo the symbol() function)
@@ -34,7 +34,7 @@ export default async function render() {
     if (window.sorobanUserAddress) {
       document.querySelector('#enableFreighter')!.className = 'done'
     }
-    if (window.freighterNetwork?.network === 'FUTURENET') {
+    if (window.freighterNetwork?.network.toUpperCase() === 'FUTURENET') {
       document.querySelector('#selectFuturenet')!.className = 'done'
     }
 
