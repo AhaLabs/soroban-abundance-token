@@ -39,6 +39,8 @@ generate: build && build_generated install_generated
         --wasm ./target/wasm32-unknown-unknown/release/abundance_token.wasm \
         --id 3d0ad3712bcb251a0dc899882313ad7167c9400a5f51444d86ab6c3f93faa513 \
         --root-dir ./target/js-clients/abundance \
+        --rpc-url "https://rpc-futurenet.stellar.org:443/soroban/rpc" \
+        --network-passphrase "Test SDF Future Network ; October 2022" \
         --contract-name abundance-token
 
 dev: generate
