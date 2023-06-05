@@ -9,10 +9,10 @@ function isRpcError(e: unknown): e is RpcError {
 }
 
 /**
- * Fetch account from {@link HORIZON_URL}.
- * If RPC returns 404 or 405, then the account has not yet been created/funded.
- * In that case, hit {@link FRIENDBOT_URL} to fund it, then re-query RPC to get
- * its up-to-date balance.
+ * Fetch account from {@link RPC_URL}.
+ * If RPC returns error code -32600, then the account has not yet been
+ * created/funded.  In that case, hit friendbot to fund it, then re-query RPC
+ * to get its up-to-date balance.
  */
 async function ensureAccountFunded(publicKey: string): Promise<void> {
   try {

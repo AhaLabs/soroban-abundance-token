@@ -7,8 +7,7 @@
  * This is probably ok since the numbers will be so huge.
  */
 export function formatBalance(undivided: BigInt, decimals: number): BigInt | number {
-  return undivided < BigInt(Number.MAX_SAFE_INTEGER)
+  return undivided.valueOf() < BigInt(Number.MAX_SAFE_INTEGER)
     ? Number(undivided) / (10 ** decimals)
-    // @ts-expect-error TS is very confused by BigInt division
-    : (undivided / (10n ** BigInt(decimals))) as unknown as BigInt
+    : (undivided.valueOf() / (10n ** BigInt(decimals))) as unknown as BigInt
 }
