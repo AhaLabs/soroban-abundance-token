@@ -35,7 +35,7 @@ install_generated: clean_generated
     npm i -S abundance-token@./target/js-clients/abundance
 
 generate: build && build_generated install_generated
-    ./target/bin/soroban contract bindings ts \
+    ./target/bin/soroban contract bindings typescript \
         --wasm ./target/wasm32-unknown-unknown/release/abundance_token.wasm \
         --id 3d0ad3712bcb251a0dc899882313ad7167c9400a5f51444d86ab6c3f93faa513 \
         --root-dir ./target/js-clients/abundance \
