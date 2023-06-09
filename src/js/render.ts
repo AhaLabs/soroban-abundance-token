@@ -13,6 +13,8 @@ export default async function render() {
     window.freighterNetwork?.network.toUpperCase() === 'FUTURENET'
 
   if (allReady) {
+    // @ts-expect-error
+    window.decimals = decimals
     // ensure that the symbol matches the expected (mostly to demo the symbol() function)
     if (!tokenSymbol) {
       tokenSymbol = (await symbol()).toString()
