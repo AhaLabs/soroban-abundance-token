@@ -3,8 +3,8 @@ set dotenv-load
 
 export PATH := './target/bin:' + env_var('PATH')
 TARGET_DIR := './target/wasm32-unknown-unknown/release'
-CONTRACT_ID := '3d0ad3712bcb251a0dc899882313ad7167c9400a5f51444d86ab6c3f93faa513'
-SMARTDEPLOY := TARGET_DIR / 'abundance_token.wasm'
+CONTRACT_ID := 'CBUM3YE3MZPESPT7CPPPYTX2766HVEX4GPN3HBDLUFJGAVTVIWNP56DW'
+WASM := TARGET_DIR / 'abundance_token.wasm'
 soroban := 'target/bin/soroban'
 
 soroban +args:
@@ -14,7 +14,10 @@ soroban +args:
 s name +args:
     @just soroban {{ name }} {{ args }}
 
-init:
+deploy: build
+    echo "update CONTRACT_ID in justfile with: $(soroban contract deploy --network futurenet --source default --wasm {{ WASM }}), then run 'just init'"
+
+init: && generate
     soroban contract invoke --network futurenet --source default --id {{ CONTRACT_ID }} -- \
     initialize \
     --symbol '"41424E44"' \
@@ -25,19 +28,16 @@ init:
 build profile='release':
     cargo build --profile {{profile}} --target wasm32-unknown-unknown
 
-build_generated:
-    cd target/js-clients/abundance && npm i && npm run build
-
 clean_generated:
     rm -rf node_modules/abundance-token && rm -rf node_modules/.vite && rm -rf node_modules/.astro 
 
 install_generated: clean_generated
     npm i -S abundance-token@./target/js-clients/abundance
 
-generate: build && build_generated install_generated
+generate: build && install_generated
     ./target/bin/soroban contract bindings typescript \
-        --wasm ./target/wasm32-unknown-unknown/release/abundance_token.wasm \
-        --id 3d0ad3712bcb251a0dc899882313ad7167c9400a5f51444d86ab6c3f93faa513 \
+        --wasm {{ WASM }} \
+        --id {{ CONTRACT_ID }} \
         --root-dir ./target/js-clients/abundance \
         --rpc-url "https://rpc-futurenet.stellar.org:443/soroban/rpc" \
         --network-passphrase "Test SDF Future Network ; October 2022" \
