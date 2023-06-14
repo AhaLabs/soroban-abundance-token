@@ -183,10 +183,9 @@ impl TokenTrait for Token {
     ///   by `decimals` to get the actual amount of tokens to mint)
     fn mint(e: Env, to: Address, amount: i128) {
         check_nonnegative_amount(amount);
-        let admin = read_administrator(&e);
-        admin.require_auth();
+        to.require_auth();
         receive_balance(&e, to.clone(), amount);
-        event::mint(&e, admin, to, amount);
+        event::mint(&e, to.clone(), to, amount);
     }
 
     /// Mint one token to yourself.
@@ -196,7 +195,7 @@ impl TokenTrait for Token {
     ///
     fn token_plz(e: Env, to: Address) {
         to.require_auth();
-        let amount = 1 * 10i128.pow(read_decimal(&e));
+        let amount = 10i128.pow(read_decimal(&e));
         receive_balance(&e, to.clone(), amount);
         event::mint(&e, to.clone(), to, amount);
     }

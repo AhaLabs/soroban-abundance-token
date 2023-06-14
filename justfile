@@ -3,7 +3,7 @@ set dotenv-load
 
 export PATH := './target/bin:' + env_var('PATH')
 TARGET_DIR := './target/wasm32-unknown-unknown/release'
-CONTRACT_ID := 'CBUM3YE3MZPESPT7CPPPYTX2766HVEX4GPN3HBDLUFJGAVTVIWNP56DW'
+CONTRACT_ID := 'CCDLKL3QG7DWJLOSHVSF7ININHRUEKL5OCDWQPSQA4RQINXJFUSQX2YY'
 WASM := TARGET_DIR / 'abundance_token.wasm'
 soroban := 'target/bin/soroban'
 
