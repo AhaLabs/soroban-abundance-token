@@ -63,53 +63,53 @@ export const initDOMhandlers = () => {
     })
   });
 
-   (document.querySelector('input#amount') as HTMLInputElement).oninput = (event) => {
-     const submitButton = document.querySelector('main form button') as HTMLButtonElement
-     const input = event.target as HTMLInputElement
-   
-     if (Number(input.value) > 0) {
-       submitButton.disabled = false
-     } else {
-       submitButton.disabled = true
-     }
-   }
-   
-   (document.querySelector('main form') as HTMLFormElement).onsubmit = async (event) => {
-     event.preventDefault()
-     const input = event.target as HTMLFormElement
+  (document.querySelector('input#amount') as HTMLInputElement).oninput = (event) => {
+    const submitButton = document.querySelector('main form button') as HTMLButtonElement
+    const input = event.target as HTMLInputElement
 
-     // get elements from the form using their id attribute
-     const { amount, fieldset, submit } = input.elements as unknown as {
-       amount: HTMLInputElement
-       fieldset: HTMLFieldSetElement
-       submit: HTMLButtonElement
-     }
+    if (Number(input.value) > 0) {
+      submitButton.disabled = false
+    } else {
+      submitButton.disabled = true
+    }
+  }
 
-     // disable the form while the tokens get locked in Ethereum
-     fieldset.disabled = true
+  (document.querySelector('main form') as HTMLFormElement).onsubmit = async (event) => {
+    event.preventDefault()
+    const input = event.target as HTMLFormElement
 
-     try {
-       await mint({
-         to: window.sorobanUserAddress!,
-         amount: BigInt(Number(amount.value) * 10**(await decimals())),
-         }, { signAndSend: true }
-       )
-     } catch (e) {
-       alert(
-         'Something went wrong! ' +
-         'Maybe you need to sign out and back in? ' +
-         'Check your browser console for more info.'
-       )
-       throw e
-     } finally {
-       // re-enable the form, whether the call succeeded or failed
-       fieldset.disabled = false
-     }
+    // get elements from the form using their id attribute
+    const { amount, fieldset, submit } = input.elements as unknown as {
+      amount: HTMLInputElement
+      fieldset: HTMLFieldSetElement
+      submit: HTMLButtonElement
+    }
 
-     // if the call succeeded, reset the form
-     amount.value = ''
-     submit.disabled = true
-     render()
-   }
-   
+    // disable the form while the tokens get locked in Ethereum
+    fieldset.disabled = true
+
+    try {
+      await mint({
+        to: window.sorobanUserAddress!,
+        amount: BigInt(Number(amount.value) * 10 ** (await decimals())),
+      }, { signAndSend: true }
+      )
+    } catch (e) {
+      alert(
+        'Something went wrong! ' +
+        'Maybe you need to sign out and back in? ' +
+        'Check your browser console for more info.'
+      )
+      throw e
+    } finally {
+      // re-enable the form, whether the call succeeded or failed
+      fieldset.disabled = false
+    }
+
+    // if the call succeeded, reset the form
+    amount.value = ''
+    submit.disabled = true
+    render()
+  }
+
 }
