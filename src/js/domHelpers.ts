@@ -92,7 +92,8 @@ export const initDOMhandlers = () => {
        await mint({
          to: window.sorobanUserAddress!,
          amount: BigInt(Number(amount.value) * 10**(await decimals())),
-       })
+         }, { signAndSend: true }
+       )
      } catch (e) {
        alert(
          'Something went wrong! ' +
